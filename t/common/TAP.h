@@ -25,7 +25,7 @@ void _OK(bool ok, char* hint) {
  * `grep OK $0.cpp | wc'
  */
 inline
-void OK_SUM(char* prog) {
+void _OK_SUM(char* prog) {
     
     char cmd[1024];
     snprintf(cmd, sizeof(cmd), "egrep '\\bOK\\\(' %s.cpp | wc -l", prog);
@@ -41,5 +41,7 @@ void OK_SUM(char* prog) {
         printf("1..%d\n", n);
     }
 }
+
+#define OK_SUM() _OK_SUM(argv[0])
 
 #endif

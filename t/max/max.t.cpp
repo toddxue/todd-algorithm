@@ -3,7 +3,7 @@
 #include <limits.h>
 
 int main(int argc, char* argv[]) {
-    OK_SUM(*argv);
+    OK_SUM();
 
     OK(INT_MIN == max(0));
     OK(1 == max(1, 1));
