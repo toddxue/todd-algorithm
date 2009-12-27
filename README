@@ -1,1 +1,15 @@
 Some algorithm codes from Todd Xue
+
+    Thoughts about source codes structure
+
+      1. The root directory contains the source codes/Makefile/README
+      2. There will be only 1 Makefile for the whole project, e.g.
+         no sub directory Makefile
+      3. Testing take Perl's TAP protocol, ref perldoc Test::Harness
+         e.g.
+	     max.cpp is tested by t/max/max.t.cpp,
+	     if test is too complicated, t/max/max.perl.t or (...ruby.t)
+	     will be added.
+	 To let prove run non perl script, `--exec "" ' is added into .proverc
+	     e.g. t/max/max.t here is a binary
+
