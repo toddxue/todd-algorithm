@@ -1,6 +1,8 @@
 .PHONY     : t all clean d
-all        : 
+all        :
 
+CXX        = g++
+CC         = $(CXX)
 CPPFLAGS   = -I. -It/common
 
 TODDLIB    = libtodd-algorithm.a
