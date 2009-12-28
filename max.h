@@ -15,4 +15,8 @@ int max(int c, ...);
 /* max{ a_i + .. a_j | 0 <= i < j < n} */
 int max_partial_sum(int n, int* a);
 
+/* same as max_partial_sum, but a[n] loops to a[0] */
+int max_partial_sum_circle(int n, int* a);
+
+
 #endif

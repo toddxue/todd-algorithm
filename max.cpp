@@ -80,3 +80,42 @@ int max_partial_sum(int n, int* a) {
     return max;
 }
 
+/*
+ *-------------------------------------------------------------------------
+ *
+ * max_partial_sum_circle --
+ *      same as max_partial_sum, but it's a circle now, so a[n] = a[0], ...
+ *      so sum like  + ... + a[n-1] + a[0] + ... also considered
+ *
+ *      the 1st try is to consider the array as (a[0], ..., a[n-1], a[0], ... a[n-2])
+ *      in simple words, now it's a[0..2n-2] considered
+ *
+ *      so 1 clever solution is:
+ *        max = max_partial_sum(n, a)
+ *        min = min_partial_sum(n, a), 
+ *        total = a[0] + ... + a[n-1]
+ *      then 
+ *        max = MAX(max, total-min)
+ *
+ *      NOTE: what's the case of min == total? 
+ *      
+ *      do a stupid verify quickly now, 5 pass, actually
+ *
+ *-------------------------------------------------------------------------
+ */
+int max_partial_sum_circle(int n, int* a) {
+    int max = max_partial_sum(n, a);
+    int total = 0;
+    for (int i = 0; i < n; ++i) total += a[i];
+
+    for (int i = 0; i < n; ++i) a[i] = -a[i];
+    int min = -max_partial_sum(n, a);
+    for (int i = 0; i < n; ++i) a[i] = -a[i];
+    
+    if (min == total)
+        return max;
+    
+    if (total-min > max) 
+        max = total-min;
+    return max;
+}
