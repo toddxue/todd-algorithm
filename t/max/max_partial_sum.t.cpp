@@ -91,14 +91,16 @@ int main(int argc, char* argv[]) {
     OK(my_max_partial_sum(5, 1, -1, 1, -1, 2) == 2);
     OK(my_max_partial_sum(5, 1, -1, -1, 1, 1) == 2);
 
-    // random tests, maybe slow
+    // random tests, maybe slow, but not too slow to be used as testcases
     OK(random_check(1, 10, 1000));
 
     OK(random_check(2, 2, 1000));
-    OK(random_check(2, 4, 1000));
 
-    OK(random_check(4, 5, 10000));
-    OK(random_check(4, 10, 10000));
+    OK(random_check(4, 5, 80000));
+    OK(random_check(4, 10, 40000));
+
+    OK(random_check(4, 15, 20000));
+    OK(random_check(4, 20, 10000));
 
     OK(random_check(20, 5, 10000));
     OK(random_check(20, 10, 10000));
