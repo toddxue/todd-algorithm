@@ -98,24 +98,54 @@ int max_partial_sum(int n, int* a) {
  *        max = MAX(max, total-min)
  *
  *      NOTE: what's the case of min == total? 
- *      
- *      do a stupid verify quickly now, 5 pass, actually
+ *        after some concept proof, we got
+ *          1. the max_partial_sum is greedy respected to range
+ *          2. min == total means all hole-sum (=total-sum) <= 0
+ *              a) all a[i] <= 0, no need to use hole-sum
+ *              b) exist k such as a[k] > 0, max >= a[k] > max(hole-sum)
+ *          3. min != total, max(hole-sum) = max(total-sum) = total-min
+ *              in this case, choose MAX(total-min, max)
+ *
+ *      Finally, we need to calculate all these in 1 pass of the array, this 
+ *      need us writing a different loop compared against the non-circle one
  *
  *-------------------------------------------------------------------------
  */
 int max_partial_sum_circle(int n, int* a) {
-    int max = max_partial_sum(n, a);
-    int total = 0;
-    for (int i = 0; i < n; ++i) total += a[i];
 
-    for (int i = 0; i < n; ++i) a[i] = -a[i];
-    int min = -max_partial_sum(n, a);
-    for (int i = 0; i < n; ++i) a[i] = -a[i];
-    
-    if (min == total)
-        return max;
-    
-    if (total-min > max) 
+    int a0 = a[0];
+    int max = a0;
+    int min = a0;
+
+    int single_max = a0;
+    int single_min = a0;
+
+    int total = 0;
+    int sum_max = 0;
+    int sum_min = 0;
+
+    for (int i = 0; i < n; ++i) {
+
+        int v = a[i];
+        total += v;
+        sum_max += v;
+        sum_min += v;
+
+        if (sum_max < 0) sum_max = 0;
+        if (sum_max > max) max = sum_max;
+
+        if (sum_min > 0) sum_min = 0;
+        if (sum_min < min) min = sum_min;
+
+        if (single_max < v) single_max = v;
+        if (single_min > v) single_min = v;
+    }
+
+    if (single_max < 0) max = single_max;
+    if (single_min > 0) min = single_min;
+
+    if (min != total && total-min > max) 
         max = total-min;
+
     return max;
 }

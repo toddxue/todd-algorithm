@@ -90,33 +90,23 @@ int main(int argc, char* argv[]) {
     OK(my_max_partial_sum(5, 1, -1, -1, 1, 1) == 2);
 
     // random tests, maybe slow, but not too slow to be used as testcases
-    OK(random_check(1, 10, 10));
+    OK(random_check(1, 10, 1000));
 
     OK(random_check(2, 2, 1000));
-    OK(random_check(2, 20, 1000));
 
-    OK(random_check(4, 4, 80000));
-    OK(random_check(4, 40, 40000));
-    OK(random_check(4, 400, 20000));
-    OK(random_check(4, 4000, 10000));
+    OK(random_check(4, 5, 80000));
+    OK(random_check(4, 10, 40000));
 
+    OK(random_check(4, 15, 20000));
+    OK(random_check(4, 20, 10000));
+
+    OK(random_check(20, 5, 10000));
     OK(random_check(20, 10, 10000));
-    OK(random_check(20, 100, 10000));
-    OK(random_check(20, 1000, 10000));
-    OK(random_check(20, 10000, 10000));
-    OK(random_check(20, 100000, 10000));
 
+    OK(random_check(30, 5, 10000));
     OK(random_check(30, 10, 10000));
-    OK(random_check(30, 100, 10000));
-    OK(random_check(30, 1000, 10000));
-    OK(random_check(30, 10000, 10000));
-    OK(random_check(30, 100000, 10000));
 
+    OK(random_check(40, 5, 10000));
     OK(random_check(40, 10, 10000));
-    OK(random_check(40, 100, 10000));
-    OK(random_check(40, 1000, 10000));
-    OK(random_check(40, 10000, 10000));
-    OK(random_check(40, 100000, 10000));
-
     return 0;
 }
