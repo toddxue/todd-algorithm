@@ -149,3 +149,38 @@ int max_partial_sum_circle(int n, int* a) {
 
     return max;
 }
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * max_common_sub_sequence --
+ *      return a sequence which is sub sequence of both [a, a+na) and [b, b+nb)
+ *      the result are stored into sub, the 
+ *      number of elements filled are returned to caller
+ *
+ * 
+ * PRE CONDTION:
+ *      To make things simpler, all array suposed to <= 1024 elements
+ * 
+ * RETURN:
+ *      length of sub sequence
+ *
+ *-------------------------------------------------------------------------
+ */
+int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
+
+    int nsub = 0;
+    for (int i = 0; i < na; ++i) {
+        for (int j = 0; j < nb; ++j) {
+            if (a[i] == b[j]) {
+                int sub_tmp[1024] = {a[i]};
+                int nsub_tmp = 1 + max_common_sub_sequence(na-i-1, a+i+1, nb-j-1, b+j+1, sub_tmp+1);
+                if (nsub_tmp > nsub) {
+                    nsub = nsub_tmp;
+                    for (int k = 0; k < nsub; ++k) sub[k] = sub_tmp[k];
+                }
+            }
+        }
+    }
+    return nsub;
+}

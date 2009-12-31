@@ -18,5 +18,7 @@ int max_partial_sum(int n, int* a);
 /* same as max_partial_sum, but a[n] loops to a[0] */
 int max_partial_sum_circle(int n, int* a);
 
+/* just as the function name described */
+int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub);
 
 #endif
