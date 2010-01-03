@@ -6,4 +6,7 @@ t/*/*~
 t/*/*o
 t/*/*.t
 t/*/*.dSYM
-
+benchmark/*~
+benchmark/*o
+benchmark/*.b
+benchmark/*.dSYM

@@ -12,11 +12,16 @@ $(TODDLIB) : $(srcs:.cpp=.o) ; $(AR) $(ARFLAGS) $@ $^
 t_tests    = $(basename $(wildcard t/*/*.cpp))
 $(t_tests) : $(TODDLIB)
 
-all        : $(TODDLIB) $(t_tests)
-clean      : ; $(RM) -r $(TODDLIB) $(wildcard *.o) $(t_tests) *.dSYM t/*/*.o t/*/*.dSYM
+benchmark  = $(basename $(wildcard benchmark/*.cpp))
+$(benchmark) : $(TODDLIB)
+
+all        : $(TODDLIB) $(t_tests) $(benchmark)
+clean      : ; $(RM) -r $(TODDLIB) $(wildcard *.o) $(t_tests) $(benchmark) *.dSYM t/*/*.o t/*/*.dSYM
 
 t          : all; prove -rsj100 t/*/*.t
-d          : *.h *.cpp t/*/*.h t/*/*.cpp
+d          : *.h *.cpp t/*/*.h t/*/*.cpp benchmark/*.cpp
 	g++ -MM -MG $(CPPFLAGS) $^ | \
 	perl -i -lpe 's{^(\S+?).o:\s+(\S+?)\1.cpp}{$$2$$&}' > .depend
 -include .depend
+
+CXXFLAGS   = -g
