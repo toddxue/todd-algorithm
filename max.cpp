@@ -6,9 +6,11 @@
  * 2009/12/26: initial release by Todd Xue
  */
 
-#include "max.h"
 #include <limits.h>
 #include <stdarg.h>
+#include <string.h>
+#include "max.h"
+#include "hash.h"
 
 /*
  *-------------------------------------------------------------------------
@@ -177,7 +179,7 @@ int max_partial_sum_circle(int n, int* a) {
  *
  *-------------------------------------------------------------------------
  */
-int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
+int max_common_sub_sequence1(int na, int* a, int nb, int* b, int* sub) {
 
     int nsub = 0;
     for (int i = 0; i < na; ++i) {
@@ -192,6 +194,88 @@ int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
             }
         }
     }
+    return nsub;
+}
+
+struct MaxSeq {
+    int hn;
+    int hval;
+    MaxSeq* hnext;
+    int sub_c; 
+    int* sub; 
+};
+
+int _max_common_sub_sequence2(int na, int* a, int nb, int* b, int** psub, int buckets_c, MaxSeq** buckets) {
+
+    if (na == 0 || nb == 0)
+        return 0;
+    
+    using namespace hash_chaining;
+
+    int hn = (na << 16) | nb;
+    int hval = hash_hval(hn);
+    MaxSeq* max_seq = search_n(buckets_c, buckets, hval, hn);
+    if (max_seq) {
+        *psub = max_seq->sub;
+        return max_seq->sub_c;
+    }
+
+    int nsub = 0;
+    int sub[1024];
+    for (int i = 0; i < na; ++i) {
+        for (int j = 0; j < nb; ++j) {
+            if (a[i] == b[j]) {
+                int* psub_tmp;
+                int nsub_tmp = 
+                    _max_common_sub_sequence2(na-i-1, a+i+1, nb-j-1, b+j+1, &psub_tmp, buckets_c, buckets);
+                if (nsub_tmp+1 > nsub) {
+                    nsub = nsub_tmp+1;
+                    sub[0] = a[i];
+                    memcpy(sub+1, psub_tmp, nsub_tmp * sizeof(int));
+                }
+            }
+        }
+    }
+    
+    max_seq = new MaxSeq;
+    max_seq->hn = hn;
+    max_seq->hval = hval;
+    max_seq->sub_c = nsub;
+    max_seq->sub = new int[nsub];
+    memcpy(max_seq->sub, sub, nsub * sizeof(int));
+    insert(buckets_c, buckets, max_seq);
+
+    *psub = max_seq->sub;
+    return nsub;
+}
+
+int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
+
+    int buckets_c = 0;
+    for (int i = 0; i < na; ++i)
+        for (int j = 0; j < nb; ++j)
+            if (a[i] == b[j])
+                ++buckets_c;
+    
+    if (buckets_c == 0)
+        return 0;
+
+    MaxSeq** buckets = new MaxSeq*[buckets_c];
+    memset(buckets, 0, sizeof(MaxSeq*) * buckets_c);
+    int* psub;
+    int nsub = _max_common_sub_sequence2(na, a, nb, b, &psub, buckets_c, buckets);
+    memcpy(sub, psub, nsub * sizeof(int));
+
+    for (int i = 0; i < buckets_c; ++i) {
+        MaxSeq* seq = buckets[i];
+        while (seq) {
+            MaxSeq* seq2 = seq;
+            delete[] seq2->sub;
+            delete seq2;
+            seq = seq->hnext;
+        }
+    }
+    delete[] buckets;
     return nsub;
 }
 
