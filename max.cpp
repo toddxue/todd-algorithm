@@ -92,12 +92,12 @@ int max_partial_sum(int n, int* a) {
  *
  *      so 1 clever solution is:
  *        max = max_partial_sum(n, a)
- *        min = min_partial_sum(n, a), 
+ *        min = min_partial_sum(n, a),
  *        total = a[0] + ... + a[n-1]
- *      then 
+ *      then
  *        max = MAX(max, total-min)
  *
- *      NOTE: what's the case of min == total? 
+ *      NOTE: what's the case of min == total?
  *        after some concept proof, we got
  *          1. the max_partial_sum is greedy respected to range
  *          2. min == total means all hole-sum (=total-sum) <= 0
@@ -106,7 +106,7 @@ int max_partial_sum(int n, int* a) {
  *          3. min != total, max(hole-sum) = max(total-sum) = total-min
  *              in this case, choose MAX(total-min, max)
  *
- *      Finally, we need to calculate all these in 1 pass of the array, this 
+ *      Finally, we need to calculate all these in 1 pass of the array, this
  *      need us writing a different loop compared against the non-circle one
  *
  *-------------------------------------------------------------------------
@@ -144,7 +144,7 @@ int max_partial_sum_circle(int n, int* a) {
     if (single_max < 0) max = single_max;
     if (single_min > 0) min = single_min;
 
-    if (min != total && total-min > max) 
+    if (min != total && total-min > max)
         max = total-min;
 
     return max;
@@ -155,15 +155,25 @@ int max_partial_sum_circle(int n, int* a) {
  *
  * max_common_sub_sequence --
  *      return a sequence which is sub sequence of both [a, a+na) and [b, b+nb)
- *      the result are stored into sub, the 
+ *      the result are stored into sub, the
  *      number of elements filled are returned to caller
  *
- * 
+ *
  * PRE CONDTION:
  *      To make things simpler, all array suposed to <= 1024 elements
- * 
+ *
  * RETURN:
  *      length of sub sequence
+ *
+ * NOTE:
+ *      the 1st version is too simple to have bugs :), but it's too slow.
+ *      it's an about O(na^na * nb ^nb).
+ *
+ *      the 2nd version will a little more complicated, the idea is to cache
+ *      some already calculated result, so no need to recalculte
+ *        Define result(i,j) = max_common_sub_sequence(na-i, a+i, nb-j, b+j)
+ *        and flag it only is enough.
+ *
  *
  *-------------------------------------------------------------------------
  */
@@ -184,3 +194,4 @@ int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
     }
     return nsub;
 }
+
