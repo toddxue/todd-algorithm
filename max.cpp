@@ -9,6 +9,7 @@
 #include <limits.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdio.h>
 #include "max.h"
 #include "hash.h"
 
@@ -249,7 +250,7 @@ int _max_common_sub_sequence2(int na, int* a, int nb, int* b, int** psub, int bu
     return nsub;
 }
 
-int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
+int max_common_sub_sequence2(int na, int* a, int nb, int* b, int* sub) {
 
     int buckets_c = 0;
     for (int i = 0; i < na; ++i)
@@ -276,6 +277,77 @@ int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
         }
     }
     delete[] buckets;
+    return nsub;
+}
+
+int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
+
+    if (na == 0 || nb == 0)
+        return 0;
+
+    enum Orient { OWN = 0, LEFT = 1, DOWN = 2};
+    int* table = new int[na*nb];
+
+    int a0 = a[0];
+    int b0 = b[0];
+
+    table[0] = (a0 == b0) ? 1 : 0;
+
+    for (int i = 1; i < na; ++i) {
+        if (a[i] == b0)
+            table[i] = 1;
+        else
+            table[i] = (table[i-1] & 0xFFFF) + (LEFT << 16);
+    }
+
+    for (int j = 1; j < nb; ++j) {
+        if (a0 == b[j])
+            table[na * j] = 1;
+        else
+            table[na * j] = (table[na * (j-1)] & 0xFFFF) + (DOWN << 16);
+    }
+
+
+    for (int j = 1; j < nb; ++j) {
+        for (int i = 1; i < na; ++i) {
+            if (a[i] == b[j]) {
+                table[i + j * na] = 1 + (table[(i-1) + (j-1) * na] & 0xFFFF);
+            }
+            else {
+                int left = table[(i-1) + j * na] & 0xFFFF;
+                int down = table[i + (j-1) * na] & 0xFFFF;
+                if (left > down)
+                    table[i + j * na] = left + (LEFT << 16);
+                else
+                    table[i + j * na] = down + (DOWN << 16);
+            }
+        }
+    }
+
+    // finally output the overall
+    int nsub = table[na-1 + (nb-1)*na] & 0xFFFF;
+    int current_fill = nsub;
+
+    int i = na-1;
+    int j = nb-1;
+
+    while (i >= 0 && j >= 0) {
+        Orient ori = Orient(table[i + j * na] >> 16);
+        int seq_len = table[i + j * na] & 0xFFFF;
+        if (seq_len == 0)
+            break;
+        if (ori == LEFT) --i;
+        else if (ori == DOWN) --j;
+        else {
+            sub[--current_fill] = a[i];
+            --i, --j;
+        }
+    }
+    delete[] table;
+    if (current_fill != 0) {
+        printf("something wrong!\n");
+        return 0;
+    }
     return nsub;
 }
 
