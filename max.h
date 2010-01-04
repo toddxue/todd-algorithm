@@ -21,4 +21,7 @@ int max_partial_sum_circle(int n, int* a);
 /* just as the function name described */
 int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub);
 
+/* max sub increase sequences */
+int max_increase_sequence(int na, int* a, int* sub);
+
 #endif

@@ -351,3 +351,197 @@ int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
     return nsub;
 }
 
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * max_increase_sequence --
+ *      the max of all sub sequence with
+ *           sub[0] <= sub[1] <= ....
+ *
+ * RETURN:
+ *      the length of such max sub sequence
+ *
+ *-------------------------------------------------------------------------
+ */
+int max_increase_sequence1(int na, int* a, int* sub) {
+    // 1st enumerate all subsets
+    int* mark = new int[na];
+    memset(mark, 0, sizeof(int) * na);
+
+    int max = 0;
+
+    int total = 1 << na; // 2^na, e.g. n==2, 1<<2 == 4 == 2^2
+    for (int i = 1; i < total; ++i) {
+        // add 1 operation
+        int j = 0;
+        while (mark[j] == 1) {
+            mark[j] = 0;
+            ++j;
+        }
+        mark[j] = 1;
+
+        // decide if it's a increasement sequence
+        bool is_increase = true;
+        int prev = INT_MIN;
+        int n = 0;
+        for (int k = 0; k < na; ++k) {
+            if (mark[k] == 1) {
+                ++n;
+                if (a[k] < prev) {
+                    is_increase = false;
+                    break;
+                }
+                prev = a[k];
+            }
+        }
+        if (is_increase) {
+            if (n > max) {
+                max = n;
+                int fill = 0;
+                for (int k = 0; k < na; ++k) {
+                    if (mark[k] == 1)
+                        sub[fill++] = a[k];
+                }
+            }
+        }
+    }
+    delete[] mark;
+    return max;
+}
+
+/**
+   a data diagram of a sample data demonstrates everything
+   about this algorithm. Pending a math proof for this.
+   this is a O(n^3) algorithm, compared to the above O(2^n)
+   is there a O(n^2)?
+
+   the interesting Q is:
+     math proof vs test cases, which win? :)
+
+   ---data diagram:----
+      1 1 1 0 1 2 1 1 0 0 1:
+
+      --> 1 1 0 1 2 1 1 0 0 1
+      - 1
+
+      --> 1 0 1 2 1 1 0 0 1
+      - 1
+      - 1 1
+
+      --> 0 1 2 1 1 0 0 1
+      - 0
+      - 1 1
+
+      --> 1 2 1 1 0 0 1
+      - 0
+      - 1 1
+      - 1 1 1
+
+      --> 2 1 1 0 0 1
+      - 0
+      - 1 1
+      - 1 1 1
+      - 1 1 1 2
+
+      --> 1 1 0 0 1
+      - 0
+      - 1 1
+      - 1 1 1
+      - 1 1 1 1
+
+      --> 1 0 0 1
+      - 0
+      - 1 1
+      - 1 1 1
+      - 1 1 1 1
+      - 1 1 1 1 1
+
+      --> 0 0 1
+      - 0
+      - 0 0
+      - 1 1 1
+      - 1 1 1 1
+      - 1 1 1 1 1
+
+      --> 0 1
+      - 0
+      - 0 0
+      - 0 0 0
+      - 1 1 1 1
+      - 1 1 1 1 1
+
+      --> 1
+      - 0
+      - 0 0
+      - 0 0 0
+      - 1 1 1 1
+      - 1 1 1 1 1
+      - 1 1 1 1 1 1
+
+ */
+int max_increase_sequence(int na, int* a, int* sub) {
+    int* seqs = new int[na*na];
+    int last = 0;
+    seqs[last*na + 0] = a[0];
+
+#if defined(DEBUG_max_increase_sequence)
+    printf("\n-->");
+    for (int i = 0; i < na; ++i)
+        printf(" %d", a[i]);
+    printf("\n");
+    printf("- %d\n", seqs[0]);
+#endif
+
+    for (int i = 1; i < na; ++i) {
+
+#if defined(DEBUG_max_increase_sequence)
+        printf("\n-->");
+        for (int j = i; j < na; ++j)
+            printf(" %d", a[j]);
+        printf("\n");
+#endif
+
+        int v = a[i];
+
+        int curr = last; {
+            // promote to curr+1
+            if (seqs[curr*na + curr] <= v) {
+                for (int j = 0; j <= curr; ++j)
+                    seqs[(curr+1)*na + j] = seqs[curr*na + j];
+                seqs[(curr+1)*na + (curr+1)] = v;
+                ++last;
+            }
+            // operation 2: replace the last element
+            if (seqs[curr*na + curr] > v && (curr == 0 || seqs[curr*na + curr-1] <= v))
+                seqs[curr*na + curr] = v;
+        }
+
+        for (--curr; curr >= 0; --curr) {
+            // operation 1: promote to curr+1
+            if (seqs[curr*na + curr] <= v && v < seqs[(curr+1)*na + (curr+1)]) {
+                for (int j = 0; j <= curr; ++j)
+                    seqs[(curr+1)*na + j] = seqs[curr*na + j];
+                seqs[(curr+1)*na + (curr+1)] = v;
+            }
+
+            // operation 2: replace the last element
+            if (seqs[curr*na + curr] > v && (curr == 0 || seqs[curr*na + curr-1] <= v))
+                seqs[curr*na + curr] = v;
+        }
+
+#if defined(DEBUG_max_increase_sequence)
+        for (int c = 0; c <= last; ++c) {
+            printf("-");
+            for (int j = 0; j <= c; ++j)
+                printf(" %d", seqs[c*na + j]);
+            printf("\n");
+        }
+#endif
+    }
+    for (int j = 0; j <= last; ++j)
+        sub[j] = seqs[last*na + j];
+    delete[] seqs;
+    return last+1;
+}
+

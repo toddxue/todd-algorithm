@@ -3,7 +3,7 @@ all        :
 
 CXX        = g++
 CC         = $(CXX)
-CPPFLAGS   = -I. -It/common
+CPPFLAGS   = -I. -It/common $(DEF)
 
 TODDLIB    = libtodd-algorithm.a
 srcs       = $(wildcard *.cpp)
