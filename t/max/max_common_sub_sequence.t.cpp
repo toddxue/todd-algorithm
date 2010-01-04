@@ -2,6 +2,23 @@
 #include "max.h"
 #include <limits.h>
 
+bool rcheck(int na, int nb, int bound) {
+    int* a = new int[na];
+    int* b = new int[nb];
+    int nsub = na < nb ? na : nb;
+    int* sub = new int[nsub];
+    for (int i = 0; i < na; ++i)
+        a[i] = random() % bound;
+    for (int i = 0; i < nb; ++i)
+        b[i] = random() % bound;
+
+    int max_common_sub_sequence1(int na, int* a, int nb, int* b, int* sub);
+    int nsub1 = max_common_sub_sequence1(na, a, nb, b, sub);
+    int nsub2 = max_common_sub_sequence (na, a, nb, b, sub);
+
+    return nsub1 == nsub2;
+}
+
 int main(int argc, char* argv[]) {
     OK_SUM();
 
@@ -92,6 +109,23 @@ int main(int argc, char* argv[]) {
         OK(2 == max_common_sub_sequence(7, a, 14, b, sub) && sub[0] == 1 && sub[1] == 2);
         OK(2 == max_common_sub_sequence(14, b, 7, a, sub) && sub[0] == 1 && sub[1] == 2);
     }
+
+    // random cases now
+    OK(rcheck(10, 10, 2));
+    OK(rcheck(10, 10, 3));
+    OK(rcheck(10, 10, 4));
+    OK(rcheck(10, 10, 5));
+    OK(rcheck(20, 10, 2));
+    OK(rcheck(20, 10, 3));
+    OK(rcheck(20, 10, 4));
+    OK(rcheck(20, 10, 5));
+
+    /*
+    for (int i = 0; i < 20; ++i)
+        for (int j = 0; j < 20; ++j)
+            for (int bound = 1; bound < 5; ++bound)
+                OKx(rcheck(i, j, bound));
+    */
 
     return 0;
 }
