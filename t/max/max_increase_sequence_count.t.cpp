@@ -5,31 +5,21 @@
 bool rcheck(int na, int bound) {
     int* a = new int[na];
     int* sub1 = new int[na];
-    int* sub2 = new int[na];
 
     for (int i = 0; i < na; ++i)
         a[i] = random() % bound;
 
     int max_increase_sequence1(int na, int* a, int* sub);
     int nsub1 = max_increase_sequence1(na, a, sub1);
-    int nsub2 = max_increase_sequence (na, a, sub2);
+    int nsub2 = max_increase_sequence_count (na, a);
 
     int r = nsub1 == nsub2;
-
     if (!r) {
-        printf("sub1: ");
-        for (int i = 0; i < nsub1; ++i)
-            printf("%d ", sub1[i]);
-        printf("\n");
-
-        printf("sub2: ");
-        for (int i = 0; i < nsub2; ++i)
-            printf("%d ", sub2[i]);
-        printf("\n");
+        for (int i = 0; i < na; ++i)
+            printf("%d ", a[i]);
+        printf("\n nsub1 = %d, nsub2=%d\n", nsub1, nsub2);
     }
-
     delete[] sub1;
-    delete[] sub2;
     return r;
 }
 
@@ -39,22 +29,25 @@ int main(int argc, char* argv[]) {
 
     {
         int a[] = {1, 2, -1, 0};
-        int sub[4];
-        int nsub = max_increase_sequence(4, a, sub);
+        int nsub = max_increase_sequence_count(4, a);
         OK(2 == nsub);
     }
 
     {
         int a[] = {4, 3, 2, 1};
-        int sub[4];
-        int nsub = max_increase_sequence(4, a, sub);
+        int nsub = max_increase_sequence_count(4, a);
         OK(1 == nsub);
     }
 
     {
         int a[] = {4, 1, 2, 3};
-        int sub[4];
-        int nsub = max_increase_sequence(4, a, sub);
+        int nsub = max_increase_sequence_count(4, a);
+        OK(3 == nsub);
+    }
+
+    {
+        int a[] = {1, 2, 1, 1};
+        int nsub = max_increase_sequence_count(4, a);
         OK(3 == nsub);
     }
 

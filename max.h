@@ -23,5 +23,6 @@ int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub);
 
 /* max sub increase sequences */
 int max_increase_sequence(int na, int* a, int* sub);
+int max_increase_sequence_count(int na, int* a);
 
 #endif

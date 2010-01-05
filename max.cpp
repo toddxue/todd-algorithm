@@ -505,29 +505,34 @@ int max_increase_sequence(int na, int* a, int* sub) {
         int v = a[i];
 
         int curr = last; {
+            int curr_last = curr*na + curr;
             // promote to curr+1
-            if (seqs[curr*na + curr] <= v) {
-                for (int j = 0; j <= curr; ++j)
-                    seqs[(curr+1)*na + j] = seqs[curr*na + j];
+            if (seqs[curr_last] <= v) {
+                memcpy(&seqs[(curr+1)*na], &seqs[curr*na], (curr+1)*sizeof(int));
                 seqs[(curr+1)*na + (curr+1)] = v;
                 ++last;
             }
             // operation 2: replace the last element
-            if (seqs[curr*na + curr] > v && (curr == 0 || seqs[curr*na + curr-1] <= v))
-                seqs[curr*na + curr] = v;
+            if (seqs[curr_last] > v && (curr == 0 || seqs[curr_last-1] <= v))
+                seqs[curr_last] = v;
         }
 
         for (--curr; curr >= 0; --curr) {
+            int curr_last = curr*na + curr;
+
             // operation 1: promote to curr+1
-            if (seqs[curr*na + curr] <= v && v < seqs[(curr+1)*na + (curr+1)]) {
-                for (int j = 0; j <= curr; ++j)
-                    seqs[(curr+1)*na + j] = seqs[curr*na + j];
+            if (seqs[curr_last] <= v && v < seqs[(curr+1)*na + (curr+1)]) {
+                memcpy(&seqs[(curr+1)*na], &seqs[curr*na], (curr+1)*sizeof(int));
                 seqs[(curr+1)*na + (curr+1)] = v;
             }
 
+            // a trick to reduce some operations
+            if (seqs[curr_last] <= v)
+                break;
+
             // operation 2: replace the last element
-            if (seqs[curr*na + curr] > v && (curr == 0 || seqs[curr*na + curr-1] <= v))
-                seqs[curr*na + curr] = v;
+            if (seqs[curr_last] > v && (curr == 0 || seqs[curr_last-1] <= v))
+                seqs[curr_last] = v;
         }
 
 #if defined(DEBUG_max_increase_sequence)
@@ -543,5 +548,46 @@ int max_increase_sequence(int na, int* a, int* sub) {
         sub[j] = seqs[last*na + j];
     delete[] seqs;
     return last+1;
+}
+
+/**
+   Note: there is a O(nlog(n)) algorithm, log(n)
+   comes from the binary_search against the 
+      smallest tail sub sequences below
+   Also space O(n^2) can also be get rid of due to 
+   we only need the tail element actually
+
+   but such way, we only know the count
+ */
+int max_increase_sequence_count(int na, int* a) {
+    int* min_tail = new int[na];
+    min_tail[0] = a[0];
+    int min_tail_c = 1;
+
+    for (int i = 1; i < na; ++i) {
+        int v = a[i];
+
+        // one said binary search is never easy, it's true in this case
+        // binary search to get the smallest pos which min_tail[pos] > v
+        // the key point is not to find maxest pos which [pos] <= v
+        int l = 0, r = min_tail_c-1;
+        int m;
+        while (l < r) {
+            m = (l+r)/2;
+            if (min_tail[m] <= v) 
+                l = m+1;
+            else 
+                r = m;
+        }
+        int pos = l;
+        if (min_tail[pos] <= v) // all <= v
+            min_tail[min_tail_c++] = v;
+        else if (pos == 0) // v < all
+            min_tail[0] = v;
+        else // [pos-1] <= v < [pos]
+            min_tail[pos] = v;
+    }
+    delete[] min_tail;
+    return min_tail_c;
 }
 
