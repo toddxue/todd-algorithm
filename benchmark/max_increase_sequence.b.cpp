@@ -11,6 +11,10 @@ int main(int argc, char* argv[]) {
     // (2*10^4) ** (n^3) => 8 * 10^12 = 80G, 
     // so it means n^3 is far from good when na is large
 
+    // now it's a true time-O(nlog(n)) and space O(3n)
+    // algorithm, when 10,000,000, it take about 2 secs
+    // really fast and efficient! :)
+
     int na = strtol(argv[1], 0, 10);
     {
         int* a = new int[na];

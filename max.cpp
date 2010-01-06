@@ -362,6 +362,11 @@ int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub) {
  * RETURN:
  *      the length of such max sub sequence
  *
+ * After thoughts:
+ *      1. version 1 is very stupid, but hard to have bug
+ *      2. version 2 using recursive, dont go further, took about O(N^3)
+ *      3. final one is really elegant, the link list data structure **shines**
+ *
  *-------------------------------------------------------------------------
  */
 int max_increase_sequence1(int na, int* a, int* sub) {
@@ -480,7 +485,7 @@ int max_increase_sequence1(int na, int* a, int* sub) {
       - 1 1 1 1 1 1
 
  */
-int max_increase_sequence(int na, int* a, int* sub) {
+int max_increase_sequence2(int na, int* a, int* sub) {
     int* seqs = new int[na*na];
     int last = 0;
     seqs[last*na + 0] = a[0];
@@ -588,6 +593,62 @@ int max_increase_sequence_count(int na, int* a) {
             min_tail[pos] = v;
     }
     delete[] min_tail;
+    return min_tail_c;
+}
+
+int max_increase_sequence(int na, int* a, int* sub) {
+    struct Node {
+        int n;
+        Node* prev;
+    };
+    Node* free_nodes = new Node[na];
+    int free_nodes_curr = 0;
+
+    Node** min_tail = new Node*[na];
+    min_tail[0] = &free_nodes[free_nodes_curr++];
+    min_tail[0]->n = a[0];
+    min_tail[0]->prev = 0;
+    int min_tail_c = 1;
+
+    for (int i = 1; i < na; ++i) {
+        int v = a[i];
+
+        // one said binary search is never easy, it's true in this case
+        // binary search to get the smallest pos which min_tail[pos] > v
+        // the key point is not to find maxest pos which [pos] <= v
+        int l = 0, r = min_tail_c-1;
+        int m;
+        while (l < r) {
+            m = (l+r)/2;
+            if (min_tail[m]->n <= v)
+                l = m+1;
+            else
+                r = m;
+        }
+        int pos = l;
+        if (min_tail[pos]->n <= v) { // all <= v
+            min_tail[min_tail_c] = &free_nodes[free_nodes_curr++];
+            min_tail[min_tail_c]->n = v;
+            min_tail[min_tail_c]->prev = min_tail[min_tail_c-1];
+            min_tail_c++;
+        }
+        else if (pos == 0) { // v < all
+            min_tail[0] = &free_nodes[free_nodes_curr++];
+            min_tail[0]->n = v;
+            min_tail[0]->prev = 0;
+        }
+        else { // [pos-1] <= v < [pos]
+            min_tail[pos] = &free_nodes[free_nodes_curr++];
+            min_tail[pos]->n = v;
+            min_tail[pos]->prev = min_tail[pos-1];
+        }
+    }
+    int pos = min_tail_c;
+    for (Node* node = min_tail[min_tail_c-1]; node; node = node->prev)
+        sub[--pos] = node->n;
+
+    delete[] min_tail;
+    delete[] free_nodes;
     return min_tail_c;
 }
 
