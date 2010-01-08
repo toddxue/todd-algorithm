@@ -40,11 +40,7 @@ int main(int argc, char* argv[]) {
             pat[i] = 'b' + random() % bound;
         pat[npat] = 0;
 
-        char *s0, *s1, *s2, *s3;
-        {
-            TIMED_BLOCK_STDERR(gstrstr, true);
-            s0 = gstrstr(a, pat);
-        }
+        char *s1, *s2, *s3;
         {
             TIMED_BLOCK_STDERR(strstr, true);
             s1 = mystrstr(a, pat);
@@ -57,7 +53,7 @@ int main(int argc, char* argv[]) {
             TIMED_BLOCK_STDERR(KMP, true);
             s3 = substr(na, a, npat, pat);
         }
-        if (s0 != s1 || s1 != s2 || s1 != s3) {
+        if (s1 != s2 || s1 != s3) {
             fprintf(stderr, "result different for this run\n");
         }
         fprintf(stderr, "\n");
@@ -72,11 +68,7 @@ int main(int argc, char* argv[]) {
             pat[i] = 'a' + random() % bound;
         pat[npat] = 0;
 
-        char *s0, *s1, *s2, *s3;
-        {
-            TIMED_BLOCK_STDERR(samecharset_gstrstr, true);
-            s0 = gstrstr(a, pat);
-        }
+        char *s1, *s2, *s3;
         {
             TIMED_BLOCK_STDERR(samecharset_strstr, true);
             s1 = strstr(a, pat);
@@ -89,7 +81,7 @@ int main(int argc, char* argv[]) {
             TIMED_BLOCK_STDERR(samecharset_KMP, true);
             s3 = substr(na, a, npat, pat);
         }
-        if (s0 != s1 || s1 != s2 || s1 != s3) {
+        if (s1 != s2 || s1 != s3) {
             fprintf(stderr, "result different for this run\n");
         }
         fprintf(stderr, "\n");
