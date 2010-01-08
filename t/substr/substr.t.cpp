@@ -43,8 +43,19 @@ int main(int argc, char* argv[]) {
     OK(rcheck(20, 3, 100));
     OK(rcheck(20, 4, 100));
     OK(rcheck(20, 5, 100));
-    OK(rcheck(100, 20, 100));
-    OK(rcheck(1000, 100, 100));
-    OK(rcheck(10000, 1000, 100));
+    OK(rcheck(20, 6, 100));
+    OK(rcheck(20, 7, 100));
+    OK(rcheck(20, 8, 100));
+
+    OK(rcheck(30, 3, 100));
+    OK(rcheck(30, 4, 100));
+    OK(rcheck(30, 5, 100));
+    OK(rcheck(30, 6, 100));
+    OK(rcheck(30, 7, 100));
+    OK(rcheck(30, 8, 100));
+
+    OK(rcheck(100, 8, 100));
+    OK(rcheck(1000, 8, 100));
+    OK(rcheck(10000, 8, 100));
     return 0;
 }

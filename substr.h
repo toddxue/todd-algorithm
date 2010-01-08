@@ -11,5 +11,9 @@
 #define _substr_h
 
 char* substr(int nstr, char* str, int npat, char* pat);
+void KMP_fail(int npat, char* pat, int* fail);
+
+char *mystrstr(char *str, char *pat);
+char* gstrstr(char* str, char* pat);
 
 #endif
