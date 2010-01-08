@@ -77,16 +77,23 @@ char* /*KMP_substr*/substr(int na, char* a, int npat, char* pat)  {
     int v;
     int i = 0;
     while (i < na) {
-
+#if 1
         /**
-         * after add this optimization, this finally wins strstr
+         * after add this optimization, this finally wins strstr in some cases
+         * a[i..(i + (npat-1-j))] against pat[j..npat-1]
          */
-        if (!((1<< (((unsigned char)(v = a[i])) & 31)) & mask)) {
+        int k = i + npat-1-j;
+        if (k >= na)
+            break;
+
+        if (!((1 << (((unsigned char)a[k]) & 31)) & mask)) {
             j = 0;
-            i += npat;
+            i = k+1;
             continue;
         }
+#endif
         
+        v = a[i];
         while (v != pat[j] && j > 0) 
             j = fail[j-1]+1;
 
@@ -125,15 +132,22 @@ char *mystrstr(char *str, char *pat)
         mask |= 1 << (c & 31);
 
     int npat = strlen(pat);
-    while (c = *str) {
-        if (!((1 << (c & 31)) & mask))
+    char* start = str;
+    char* str_end = strchr(str, '\0');
+    char* end = str_end - npat;
+
+    while (str <= end) {
+        /*
+         * [str .. (str+npat-1)]
+         */
+        if (!((1 << (((unsigned char)str[npat-1]) & 31)) & mask))
             str += npat;
         else {
             char* strp = str;
             char* patp = pat;
             do {
                 if (!*patp)
-                    return strp;
+                    return str;
             } while (*strp++ == *patp++);
             ++str;
         }

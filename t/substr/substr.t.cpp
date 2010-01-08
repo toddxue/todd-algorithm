@@ -16,7 +16,7 @@ bool rcheck(int nstr, int npat, int c) {
             pat[i] = 'a' + random() % 5;
         pat[npat] = 0;
 
-        char* r1 = strstr(str, pat);
+        char* r1 = mystrstr(str, pat);
         char* r2 = substr(nstr, str, npat, pat);
     
         if (r1 != r2)
