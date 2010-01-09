@@ -70,20 +70,20 @@ struct ToddTime {
     ~ToddTime() {
         if (enable) {
             level() -= 3;
-
             struct rusage ru;
             ::getrusage(RUSAGE_SELF, &ru);
             utime = TIMED_MS(ru.ru_utime) - utime;
             stime = TIMED_MS(ru.ru_stime) - stime;
 
+            char* curr = (char*)::sbrk(0);
             FILE* stream = output == 1 ? stdout : stderr;
             ::fprintf(stream, 
-                      "%.*s[%-20s] /user %10.5gms /sys %10.5gms /mem %10.5gM\n", 
+                      "%.*s[%-20s] /user %10.5gms /sys %10.5gms /mem %10u bytes\n", 
                       level(), 
                       spaces(), 
                       prompt, 
                       utime, 
-                      stime, double((char*)sbrk(0)-memory)/1000000
+                      stime, (unsigned int)(curr-memory)
                 );
         }
     }
