@@ -69,29 +69,19 @@ char* /*KMP_substr*/substr(int na, char* a, int npat, char* pat)  {
     KMP_fail(npat, pat, fail);
     
     // build a mask
+    unsigned int* masks = new unsigned int[npat];
     unsigned int mask = 0;
-    for (int i = 0; i < npat; ++i) 
+    for (int i = npat-1; i >= 0; --i) {
         mask |= 1 << (((unsigned char)pat[i]) & 31);
+        masks[i] = mask;
+    }
     
     int j = 0; 
     int v;
     int i = 0;
-    while (i < na) {
-#if 1
-        /**
-         * after add this optimization, this finally wins strstr in some cases
-         * a[i..(i + (npat-1-j))] against pat[j..npat-1]
-         */
-        int k = i + npat-1-j;
-        if (k >= na)
-            break;
+    goto checkmask;
 
-        if (!((1 << (((unsigned char)a[k]) & 31)) & mask)) {
-            j = 0;
-            i = k+1;
-            continue;
-        }
-#endif
+    while (i < na) {
         
         v = a[i];
         while (v != pat[j] && j > 0) 
@@ -101,9 +91,29 @@ char* /*KMP_substr*/substr(int na, char* a, int npat, char* pat)  {
             ++j;
             if (j == npat)
                 return a + (i+1-npat);
+            ++i;
         }
-        ++i;
+        else {
+            ++i;
+
+        checkmask:
+            /**
+             * after add this optimization, this finally wins strstr in some cases
+             * a[i..(i + (npat-1-j))] against pat[j..npat-1]
+             */
+            int k = i + npat-1-j;
+            if (k >= na)
+                break;
+
+            if (!((1 << (((unsigned char)a[k]) & 31)) & masks[j])) {
+                j = 0;
+                i = k+1;
+                continue;
+            }
+
+        }
     }
+    delete[] masks;
     delete[] fail;
     return 0;
 }
@@ -113,6 +123,8 @@ char* /*KMP_substr*/substr(int na, char* a, int npat, char* pat)  {
  *
  * mystrstr --
  *      it's faster than KMP in all cases
+ *      now this function doesn't work when npat < sizeof(int), 
+ *      but wins libc strstr in all cases
  *
  * RETURN:
  *      NULL if not
@@ -136,21 +148,30 @@ char *mystrstr(char *str, char *pat)
     char* str_end = strchr(str, '\0');
     char* end = str_end - npat;
 
+    // down
+    int pat0 = *(int*)pat;
     while (str <= end) {
+        c = *(int*)str;
+        if (c != pat0) {
+            str += sizeof(int);
+            continue;
+        }
+
         /*
          * [str .. (str+npat-1)]
          */
-        if (!((1 << (((unsigned char)str[npat-1]) & 31)) & mask))
+        if (!((1 << (((unsigned char)str[npat-1]) & 31)) & mask)) {
             str += npat;
-        else {
-            char* strp = str;
-            char* patp = pat;
-            do {
-                if (!*patp)
-                    return str;
-            } while (*strp++ == *patp++);
-            ++str;
+            continue;
         }
+
+        char* strp = str;
+        char* patp = pat;
+        do {
+            if (!*patp)
+                return str;
+        } while (*strp++ == *patp++);
+        ++str;
     }
     return 0;
 }
