@@ -151,12 +151,6 @@ char *mystrstr(char *str, char *pat)
     // down
     int pat0 = *(int*)pat;
     while (str <= end) {
-        c = *(int*)str;
-        if (c != pat0) {
-            str += sizeof(int);
-            continue;
-        }
-
         /*
          * [str .. (str+npat-1)]
          */
