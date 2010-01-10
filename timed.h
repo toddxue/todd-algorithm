@@ -7,13 +7,15 @@
 #include <unistd.h>
 #include <limits.h>
 
+extern size_t* g_xmem_pmalloced_size;
+
 struct ToddTime {
 
     float utime;
     float stime;
     float TIMED_MS(struct timeval& r) { return r.tv_sec*1000 + r.tv_usec/1000.0; }
 
-    char* memory;
+    size_t xmem_malloced_size;
 
     char const* prompt;
     int output; // 1 means stdout, 2 means stderr
@@ -57,13 +59,13 @@ struct ToddTime {
             ::getrusage(RUSAGE_SELF, &ru);
             utime = TIMED_MS(ru.ru_utime);
             stime = TIMED_MS(ru.ru_stime);
-            memory = (char*)::sbrk(0);
+            xmem_malloced_size = *g_xmem_pmalloced_size;
 
             level() += 3;
         }
         else { // useless of this, only to disable coverity warning
             utime = stime = 0;
-            memory = 0; 
+            xmem_malloced_size = 0;
         }
     }
 
@@ -78,12 +80,13 @@ struct ToddTime {
             char* curr = (char*)::sbrk(0);
             FILE* stream = output == 1 ? stdout : stderr;
             ::fprintf(stream, 
-                      "%.*s[%-20s] /user %10.5gms /sys %10.5gms /mem %10u bytes\n", 
+                      "%.*s[%-20s] %10.5gms/user %10.5gms/sys %10u bytes/mem\n", 
                       level(), 
                       spaces(), 
                       prompt, 
                       utime, 
-                      stime, (unsigned int)(curr-memory)
+                      stime, 
+                      (*g_xmem_pmalloced_size-xmem_malloced_size)
                 );
         }
     }

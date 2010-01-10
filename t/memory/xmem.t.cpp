@@ -1,6 +1,8 @@
 #include "TAP.h"
+#include "timed.h"
 #include <unistd.h>
 
+int gc, gd;
 int main(int argc, char* argv[]) {
 
 #if 0
@@ -18,18 +20,17 @@ int main(int argc, char* argv[]) {
     return 0;
 #endif
     
-#if defined(_XMEM)
     OK_SUM();
     
     struct M {
-        char* addr;
-        char* curr;
+        size_t begin;
+        size_t curr;
         M() { 
-            addr = (char*)::sbrk(0); 
+            begin = *g_xmem_pmalloced_size;
         }
         int size() { 
-            curr = (char*)::sbrk(0); 
-            return int(curr-addr);
+            curr = *g_xmem_pmalloced_size;
+            return curr-begin;
         }
     };
     {
@@ -102,9 +103,36 @@ int main(int argc, char* argv[]) {
         OK(m.size() == 0);
         OK(a1 == b1 && a2 == b2);
     }
-#else
-    printf("1..1\n");
-    printf("ok 1 - _XMEM not defined");
-#endif
+
+    // dtor called correctly after overload ::operator new/delete?
+    {
+        struct A {
+            int& ctor_c;
+            int& dtor_c;
+            A(int& ctor_c, int& dtor_c) : ctor_c(ctor_c), dtor_c(dtor_c) { ++ctor_c; }
+            ~A() { ++dtor_c; }
+        };
+        int c=0, d=0;
+        A* a = new A(c,d);
+        delete a;
+        OK(c == 1 && d == 1);
+    }
+
+    // gcc implement new[]/delete[] as:
+    // when new: ptr = int + sizeof(A) + .... + sizeof(A) 
+    // when delete, ptr[0] stores the object num, so know how many
+    // dtor to call
+    // and the pointer a is sizeof(int) greater than the malloced ptr
+    {
+        struct A {
+            int& ctor_c;
+            int& dtor_c;
+            A() : ctor_c(gc), dtor_c(gd) { ++ctor_c; }
+            ~A() { ++dtor_c; }
+        };
+        A* a = new A[10];
+        delete[] a;
+        OK(gc == 10 && gd == 10);
+    }
     return 0;
 }

@@ -1,4 +1,3 @@
-#ifdef _XMEM
 /*
  * xmem.cpp --
  *
@@ -14,6 +13,9 @@
  * disable this by exclude it from compile, or the reverse
  * and yet no thread support now
  *
+ * due to ::sbrk has some problem on some systems, we'd like
+ * to use mmap instead, this way, timed.h to be changed also
+ *
  * 2010/01/09: initial release by Todd Xue
  */
 
@@ -25,6 +27,7 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/resource.h>
+#include <sys/mman.h>
 
 struct Xmem {
 
@@ -47,24 +50,57 @@ struct Xmem {
     Head heads[eHEADS_MAX];
     size_t heads_c;
 
-    char* begin_addr;
-    char* curr_addr;
+    Xmem() : heads_c(0), mmap_heads_c(0), malloced_size(0) {}
 
-    Xmem() : heads_c(0) { begin_addr = system_memory(0); }
     
+    enum { eMMAP_HEADS_MAX = 1024*64 }; 
+    struct MmapHead {
+        void* addr;
+        size_t allocate;
+        size_t curr;
+    };
+    MmapHead mmap_heads[eMMAP_HEADS_MAX];
+    size_t mmap_heads_c;
+    size_t malloced_size;
     char* system_memory(size_t size) {
-        void* r = ::sbrk(size);
-        if (r == (void*)-1) {
-            struct rlimit rl;
-            getrlimit(RLIMIT_DATA, &rl);
-            fprintf(stderr, "sbrk(%u) failed: errno = %d, error = [%s], total=%u, rlim_cur=%u, rlim_max=%u\n", 
-                    size, errno, strerror(errno), size + (curr_addr-begin_addr),
-                    rl.rlim_cur, rl.rlim_max
-                );
+        if (mmap_heads_c > 0) {
+            MmapHead* mhead = &mmap_heads[mmap_heads_c];
+            if (mhead->curr + size <= mhead->allocate) {
+                char* r = (char*)mhead->addr + mhead->curr;
+                mhead->curr += size;
+                malloced_size += size;
+                return r;
+            }
+        }
+        
+        if (mmap_heads_c >= eMMAP_HEADS_MAX) {
+            fprintf(stderr, 
+                    "mmap_heads_c(%u) >= eMMAP_HEADS_MAX(%u)x\n", 
+                    mmap_heads_c, eMMAP_HEADS_MAX);
             exit(1);
         }
-        curr_addr = (char*)r + size;
-        return (char*)r;
+        
+        const int cPageSize = 1<<16; // 64K
+        int len = cPageSize;
+        if (size > len) {
+            if (size & (cPageSize-1) == 0)
+                len = size;
+            else
+                len = (size + cPageSize-1) & ~(cPageSize-1);
+        }
+        void* addr = mmap(0, len, PROT_READ|PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        if (addr == (void*)-1) {
+            fprintf(stderr,
+                    "system-memory(%d)->mmap(%d) failed due to errno=%d errstr=[%s]\n",
+                    len, len, errno, strerror(errno));
+            exit(1);
+        }
+        MmapHead* mhead = &mmap_heads[mmap_heads_c++];
+        mhead->addr = addr;
+        mhead->allocate = len;
+        mhead->curr = size;
+        malloced_size += size;
+        return (char*)mhead->addr;
     }
 
     void* malloc(size_t size)  {
@@ -114,6 +150,7 @@ struct Xmem {
 };
 
 Xmem g_xmem;
+size_t* g_xmem_pmalloced_size = &g_xmem.malloced_size;
 
 void* operator new(size_t size) 
 { return g_xmem.malloc(size); }
@@ -125,5 +162,3 @@ void free(void* ptr)
 { g_xmem.free(ptr); }
 void* calloc(size_t size, int elem_size) 
 { return g_xmem.calloc(size, elem_size); }
-
-#endif

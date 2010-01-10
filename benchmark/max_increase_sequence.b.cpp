@@ -22,8 +22,12 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < na; ++i) {
             a[i] = random() % 4;
         }
-        TIMED_BLOCK_STDERR(max_increase_sequence, true);
-        max_increase_sequence(na, a, sub);
+        { 
+            TIMED_BLOCK_STDERR(max_increase_sequence, true);
+            max_increase_sequence(na, a, sub);
+        }
+        delete[] sub;
+        delete[] a;
     }
     return 0;
 }
