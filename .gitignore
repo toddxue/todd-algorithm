@@ -5,6 +5,7 @@
 t/*/*~
 t/*/*o
 t/*/*.t
+t/*/*.play
 t/*/*.dSYM
 benchmark/*~
 benchmark/*o
