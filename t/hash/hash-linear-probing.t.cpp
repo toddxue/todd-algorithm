@@ -12,7 +12,7 @@ bool rcheck(int n, int c) {
     for (; c; --c) {
         Elem** buckets = (Elem**)calloc(n, sizeof(Elem*));
         int ec = random() % n;
-        Elem* e = (Elem*)malloc(ec * sizeof(Elem));
+        Elem* e = (Elem*)xmalloc(ec * sizeof(Elem));
 
         int hn_base = random();
         if (random() % 2) 
@@ -34,8 +34,8 @@ bool rcheck(int n, int c) {
                 return false;
         }
 
-        free(e);
-        free(buckets);
+        xfree(e);
+        xfree(buckets);
     }
 }
 

@@ -156,9 +156,13 @@ void* operator new(size_t size)
 { return g_xmem.malloc(size); }
 void operator delete(void* ptr) 
 { return g_xmem.free(ptr); }
-void* malloc(size_t size) 
+
+void* xmalloc(size_t size) 
 { return g_xmem.malloc(size); }
-void free(void* ptr) 
+void xfree(void* ptr) 
 { g_xmem.free(ptr); }
-void* calloc(size_t size, int elem_size) 
+void* xcalloc(size_t size, int elem_size) 
 { return g_xmem.calloc(size, elem_size); }
+
+#include "xmem.h"
+

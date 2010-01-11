@@ -64,7 +64,7 @@ struct PrecInit {
 
 void infix_to_postfix(char* str, char* dest) {
     char ops[256];
-    int ops_c;
+    int ops_c = 0;
     do {
         int c = (unsigned char)*str;
         if (isdigit(c)) {

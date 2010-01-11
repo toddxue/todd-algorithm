@@ -10,3 +10,4 @@ benchmark/*~
 benchmark/*o
 benchmark/*.b
 benchmark/*.dSYM
+*.stackdump

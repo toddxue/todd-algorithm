@@ -70,35 +70,35 @@ int main(int argc, char* argv[]) {
 
     {
         M m;
-        int* a = (int*)malloc(sizeof(int));
-        free(a);
-        int* b = (int*)malloc(sizeof(int));
-        free(b);
+        int* a = (int*)xmalloc(sizeof(int));
+        xfree(a);
+        int* b = (int*)xmalloc(sizeof(int));
+        xfree(b);
         OK(m.size() == 0);
         OK(a == b);
     }
 
     {
         M m;
-        int* a = (int*)malloc(sizeof(int)*2);
-        free(a);
-        int* b = (int*)malloc(sizeof(int)*2);
-        free(b);
+        int* a = (int*)xmalloc(sizeof(int)*2);
+        xfree(a);
+        int* b = (int*)xmalloc(sizeof(int)*2);
+        xfree(b);
         OK(m.size() == 0);
         OK(a == b);
     }
 
     {
         M m;
-        int* a1 = (int*)malloc(sizeof(int));
-        free(a1);
-        int* a2 = (int*)malloc(sizeof(int)*2);
-        free(a2);
+        int* a1 = (int*)xmalloc(sizeof(int));
+        xfree(a1);
+        int* a2 = (int*)xmalloc(sizeof(int)*2);
+        xfree(a2);
 
-        int* b1 = (int*)malloc(sizeof(int));
-        free(b1);
-        int* b2 = (int*)malloc(sizeof(int)*2);
-        free(b2);
+        int* b1 = (int*)xmalloc(sizeof(int));
+        xfree(b1);
+        int* b2 = (int*)xmalloc(sizeof(int)*2);
+        xfree(b2);
 
         OK(m.size() == 0);
         OK(a1 == b1 && a2 == b2);
