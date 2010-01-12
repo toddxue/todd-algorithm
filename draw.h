@@ -45,7 +45,7 @@ struct Draw {
             if (fabs(k) > ratio) line_to_y(x2, y2);
             else
             for (int xx = x; xx <= x2; ++xx) {
-                int yy = round(y + k * (xx-x));
+                int yy = int(round(y + k * (xx-x)));
                 str[yy][xx] = fill;
             }
         }
@@ -54,7 +54,7 @@ struct Draw {
             if (fabs(k) > ratio) line_to_y(x2, y2);
             else
             for (int xx = x; xx >= x2; --xx) {
-                int yy = round(y + k * (xx-x));
+                int yy = int(round(y + k * (xx-x)));
                 str[yy][xx] = fill;
             }
         }
@@ -76,14 +76,14 @@ struct Draw {
         if (y2 > y) {
             double k = (x2-x)*1.0 / (y2-y);
             for (int yy = y; yy <= y2; ++yy) {
-                int xx = round(x + k * (yy-y));
+                int xx = int(round(x + k * (yy-y)));
                 str[yy][xx] = fill;
             }
         }
         else if (y2 < y) {
             double k = (x2-x)*1.0 / (y2-y);
             for (int yy = y; yy >= y2; --yy) {
-                int xx = round(x + k * (yy-y));
+                int xx = int(round(x + k * (yy-y)));
                 str[yy][xx] = fill;
             }
         }

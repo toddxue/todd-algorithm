@@ -92,7 +92,78 @@ struct ToddTime {
     }
 };
 
+struct ToddTimeClock {
+
+    char const* prompt;
+    int output; // 1 means stdout, 2 means stderr
+    bool enable;
+    clock_t ticks;
+    size_t xmem_malloced_size;
+
+    int& level() {
+        static int _level = 0;
+        return _level;
+    }
+    char* spaces() {
+        static char _spaces[] = 
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            "                                            "
+            ;
+        return _spaces;
+    }
+    ToddTimeClock(char const* prompt, int output, bool enable) 
+        : prompt(prompt)
+        , output(output)
+        , enable(enable && (output == 1 || output == 2)) {
+        
+        if (enable) {
+            if (output == 0)
+                printf("%.*s~~Enter %s:\n", level(), spaces(), prompt);
+            level() += 3;
+            xmem_malloced_size = *g_xmem_pmalloced_size;
+            ticks = clock();
+        }
+    }
+
+    ~ToddTimeClock() {
+        if (enable) {
+            ticks = clock() - ticks;
+            level() -= 3;
+            FILE* stream = output == 1 ? stdout : stderr;
+            ::fprintf(stream, 
+                      "%.*s[%-20s] %g ms/clock %du bytes/mem\n",
+                      level(), 
+                      spaces(), 
+                      prompt,
+                      double(ticks)*1000/CLOCKS_PER_SEC,
+                      (*g_xmem_pmalloced_size-xmem_malloced_size)
+                );
+        }
+    }
+};
+
+#if defined(__CYGWIN__)
+
+#define TIMED_BLOCK_STDOUT(block, enable) ToddTimeClock toddtime_##block(#block, 1, enable);
+#define TIMED_BLOCK_STDERR(block, enable) ToddTimeClock toddtime_##block(#block, 2, enable);
+
+#else
+
 #define TIMED_BLOCK_STDOUT(block, enable) ToddTime toddtime_##block(#block, 1, enable);
 #define TIMED_BLOCK_STDERR(block, enable) ToddTime toddtime_##block(#block, 2, enable);
+
+#endif
 
 #endif

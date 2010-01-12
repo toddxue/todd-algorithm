@@ -44,19 +44,19 @@ void calculate_level_no(Tree* t, int* level_no, int& level_max) {
 void calculate_x(Tree* t, int* level_no) {
     int level_nodes = level_no[t->level];
     double unit = 80.0/(level_nodes+1);
-    t->x = round(unit * (1+t->level_no)); // [unit, ..., level_nodes*unit]
+    t->x = int(round(unit * (1+t->level_no))); // [unit, ..., level_nodes*unit]
     for (Tree* s = t->son; s; s = s->sib) 
         calculate_x(s, level_no);
 }
 
 void draw_tree(Tree* t, Draw& d, double yunit) {
     for (Tree* s = t->son; s; s = s->sib) {
-        d.move_to(t->x, round(yunit*(1+t->level)));
-        d.line_to(s->x, round(yunit*(1+s->level)));
+        d.move_to(t->x, int(round(yunit*(1+t->level))));
+        d.line_to(s->x, int(round(yunit*(1+s->level))));
     }
     for (Tree* s = t->son; s; s = s->sib) 
         draw_tree(s, d, yunit);
-    d.point(t->x, round(yunit*(1+t->level))) = t->no;
+    d.point(t->x, int(round(yunit*(1+t->level)))) = t->no;
 }
 
 void Tree::print() {
