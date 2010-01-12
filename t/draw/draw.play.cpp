@@ -8,9 +8,9 @@ int main(int argc, char* argv[]) {
     d.line_to(15, 15);
     d.line_to(10, 10);
 
-    d.point(20, 10) = 'o';
-    d.point(15, 15) = 'o';
-    d.point(10, 10) = 'o';
+    d.out(20, 10, 111);
+    d.out(15, 15, 222);
+    d.out(10, 10, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzuuuuuuuuuuuuuuuu");
     
 
     d.move_to(20, 20);
@@ -22,6 +22,7 @@ int main(int argc, char* argv[]) {
 //     d.line_to(10, 10);
 
     d.print();
+
     return 0;
 }
 

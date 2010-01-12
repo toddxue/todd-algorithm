@@ -14,12 +14,30 @@
 #include <math.h>
 
 struct Draw {
-    char str[30][81];
+    
+    enum {
+        eX_MAX = 100,
+        eY_MAX = 40,
+    };
+    
+    char str[eY_MAX+1][eX_MAX+2];
     char fill;
     Draw() {
         memset(str, ' ', sizeof(str));
-        for (int yy = 0; yy < 30; ++yy)
-            str[yy][80] = '\n';
+        for (int yy = 0; yy <= eY_MAX; ++yy) {
+            str[yy][0] = '|';
+            str[yy][eX_MAX] = '|';
+            str[yy][eX_MAX+1] = '\n';
+        }
+        for (int xx = 1; xx < eX_MAX; ++xx) {
+            str[0][xx] = '-';
+            str[eY_MAX][xx] = '-';
+        }
+        const char corner = 'o';
+        str[0][0]   = corner;
+        str[0][eX_MAX]  = corner;
+        str[eY_MAX][eX_MAX] = corner;
+        str[eY_MAX][0]  = corner;
         fill = '.';
     }
 
@@ -39,7 +57,7 @@ struct Draw {
      *-------------------------------------------------------------------------
      */
     void line_to(int x2, int y2) {
-        double ratio = 10.0/80.0;
+        double ratio = eY_MAX/eX_MAX*1.0;
         if (x2 > x) {
             double k = (y2-y)*1.0 / (x2-x);
             if (fabs(k) > ratio) line_to_y(x2, y2);
@@ -89,9 +107,19 @@ struct Draw {
         }
     }
 
-    
     char& point(int xx, int yy) {
         return str[yy][xx];
+    }
+
+    void out(int xx, int yy, char* text) {
+        for (int i = xx; i < eX_MAX && *text; ++i) 
+            str[yy][i] = *text++;
+    }
+
+    void out(int xx, int yy, int n) {
+        char str[16];
+        sprintf(str, "%d", n);
+        out(xx, yy, str);
     }
 
     void print() {

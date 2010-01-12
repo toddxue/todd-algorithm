@@ -10,7 +10,7 @@
 #define _tree_h
 
 struct Tree {
-    char no;
+    int no;
     void* data;
     Tree* sib;
     Tree* son;
@@ -29,10 +29,10 @@ struct Tree {
 };
 
 inline 
-void Tree_root(Tree* t, char ch) { t->level = 0; t->sib = t->son = 0; t->no = ch; }
+void Tree_root(Tree* t, int no) { t->level = 0; t->sib = t->son = 0; t->no = no; }
 
 inline 
-void Tree_parent_son(Tree* parent, Tree* son, char ch) { 
+void Tree_parent_son(Tree* parent, Tree* son, int no) { 
     son->level = parent->level+1;
     son->son = son->sib = 0;
     if (!parent->son)
@@ -42,6 +42,6 @@ void Tree_parent_son(Tree* parent, Tree* son, char ch) {
         while (t->sib) t = t->sib;
         t->sib = son;
     }
-    son->no = ch;
+    son->no = no;
 }
 #endif
