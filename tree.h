@@ -44,4 +44,8 @@ void Tree_parent_son(Tree* parent, Tree* son, int no) {
     }
     son->no = no;
 }
+
+void preorder_print0(Tree* t);
+void preorder_print (Tree* t);
+
 #endif

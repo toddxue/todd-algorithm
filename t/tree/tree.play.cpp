@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "tree.h"
 
 int main(int argc, char* argv[]) {
@@ -32,6 +33,8 @@ int main(int argc, char* argv[]) {
     Tree_parent_son(&ll_1, &e2, 12);
     
     root.print();
+    preorder_print0(&root); printf("\n");
+    preorder_print(&root); printf("\n");
 
     {
         int no = 1;
@@ -40,6 +43,8 @@ int main(int argc, char* argv[]) {
         for (int i = 2; i < 64; ++i)
             Tree_parent_son(&trees[i/2], &trees[i], i);
         trees[1].print();
+        preorder_print0(&trees[1]); printf("\n");
+        preorder_print(&trees[1]); printf("\n");
     }
 
     return 0;

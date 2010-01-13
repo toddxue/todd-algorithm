@@ -17,7 +17,7 @@ struct Draw {
     
     enum {
         eX_MAX = 100,
-        eY_MAX = 40,
+        eY_MAX = 30,
     };
     
     char str[eY_MAX+1][eX_MAX+2];

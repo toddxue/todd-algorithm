@@ -74,3 +74,48 @@ void Tree::print() {
     draw_tree(this, d, yunit);
     d.print();
 }
+
+void preorder_print0(Tree* t) {
+    printf("%d ", t->no);
+    for (t = t->son; t; t = t->sib) 
+        preorder_print0(t);
+}
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * preorder_print --
+ *      preorder tranverse
+ * 
+ * NOTES:
+ *      stack has subtree-localness:
+ *        when still in subtree, the stack above subtree is not touched
+ *      
+ *      still no strict math proof of this algorithm
+ *
+ *-------------------------------------------------------------------------
+ */
+void preorder_print(Tree* t) {
+    /*
+     * visit it when push it into stack
+     * visit order is DFS
+     */
+    Tree* nodes[1024];
+    int c = 0;
+    goto inner;
+    
+    /*
+     * assert: 
+     *   top left sib visited
+     *   recursive into top->sib
+     *   top itself is popped out
+     */
+    while (c > 0) {
+        t = nodes[--c]->sib;
+    inner:
+        for (; t; t = t->son) {
+            printf("%d ", t->no);
+            nodes[c++] = t;
+        }
+    }
+}
