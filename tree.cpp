@@ -32,27 +32,27 @@
  *
  *-------------------------------------------------------------------------
  */
-void calculate_level(Tree* t, int curr_level) {
+void tree_calculate_level(Tree* t, int curr_level) {
     t->level = curr_level++;
     for (t = t->son; t; t = t->sib) 
-        calculate_level(t, curr_level);
+        tree_calculate_level(t, curr_level);
 }
 
-void calculate_level_no(Tree* t, int* level_no, int& level_max) {
+void tree_calculate_level_no(Tree* t, int* level_no, int& level_max) {
     t->level_no = level_no[t->level];
     level_no[t->level]++;
     if (t->level > level_max)
         level_max = t->level;
     for (Tree* s = t->son; s; s = s->sib) 
-        calculate_level_no(s, level_no, level_max);
+        tree_calculate_level_no(s, level_no, level_max);
 }
 
-void calculate_x(Tree* t, int* level_no) {
+void tree_calculate_x(Tree* t, int* level_no) {
     int level_nodes = level_no[t->level];
     double unit = Draw::eX_MAX * 1.0/(level_nodes+1);
     t->x = int(round(unit * (1+t->level_no))); // [unit, ..., level_nodes*unit]
     for (Tree* s = t->son; s; s = s->sib) 
-        calculate_x(s, level_no);
+        tree_calculate_x(s, level_no);
 }
 
 void draw_tree(Tree* t, Draw& d, double yunit) {
@@ -67,15 +67,15 @@ void draw_tree(Tree* t, Draw& d, double yunit) {
 
 void Tree::print() {
 
-    calculate_level(this, 0);
+    tree_calculate_level(this, 0);
 
     // calculate level_no 1st
     int level_no[64] = {0};
     int level_max = 0;
-    calculate_level_no(this, level_no, level_max);
+    tree_calculate_level_no(this, level_no, level_max);
     
     // calculate the x by the level_no
-    calculate_x(this, level_no);
+    tree_calculate_x(this, level_no);
     
     // now it's ready to print out
     Draw d;
@@ -200,3 +200,48 @@ void reset_tree(Tree* t) {
         while (t->son) t = t->son;
     }
 }
+
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * tree_preorder --
+ *      preorder tranverse
+ *
+ * PRE CONDTION:
+ *      suppose n = number of vertices of tree t
+ *      o must at least contain n integers
+ * 
+ * NOTE:
+ *      the codes becomes obvious when we use the path concept
+ *      every path of tree is visited from leftest path to rigthtest
+ * 
+ *-------------------------------------------------------------------------
+ */
+void tree_preorder(Tree* t, int* o) {
+
+    int o_fill = 0;
+    Tree* nodes[1024];
+    int c = 0;
+    goto inner;
+    
+    while (c > 0) {
+        t = nodes[--c]->sib;
+    inner:
+        for (; t; t = t->son) {
+            o[o_fill++] = t->no;
+            if (t->sib)
+                nodes[c++] = t;
+        }
+    }
+}
+
+void tree_preorder_recursive_internal(Tree* t, int*& o) {
+    *o++ = t->no;
+    for (t = t->son; t; t = t->sib)
+        tree_preorder_recursive_internal(t, o);
+}
+void tree_preorder_recursive(Tree* t, int* o) {
+    tree_preorder_recursive_internal(t, o);
+}
+

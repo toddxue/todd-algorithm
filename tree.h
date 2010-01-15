@@ -50,4 +50,7 @@ void preorder_print (Tree* t);
 bool next_tree(Tree* t);
 void reset_tree(Tree* t);
 
+void tree_preorder(Tree* t, int* o);
+void tree_preorder_recursive(Tree* t, int* o);
+
 #endif
