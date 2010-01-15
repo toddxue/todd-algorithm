@@ -32,7 +32,8 @@ int main(int argc, char* argv[]) {
     Tree_parent_son(&ll_1, &e1, 11);
     Tree_parent_son(&ll_1, &e2, 12);
     
-    root.print();
+    root.print(); printf("\n");
+    
     preorder_print0(&root); printf("\n");
     preorder_print(&root); printf("\n");
 

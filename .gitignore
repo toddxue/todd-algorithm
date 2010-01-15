@@ -12,3 +12,4 @@ benchmark/*o
 benchmark/*.b
 benchmark/*.dSYM
 *.stackdump
+temp.*

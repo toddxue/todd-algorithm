@@ -29,11 +29,10 @@ struct Tree {
 };
 
 inline 
-void Tree_root(Tree* t, int no) { t->level = 0; t->sib = t->son = 0; t->no = no; }
+void Tree_root(Tree* t, int no) { t->sib = t->son = 0; t->no = no; }
 
 inline 
 void Tree_parent_son(Tree* parent, Tree* son, int no) { 
-    son->level = parent->level+1;
     son->son = son->sib = 0;
     if (!parent->son)
         parent->son = son;
@@ -47,5 +46,8 @@ void Tree_parent_son(Tree* parent, Tree* son, int no) {
 
 void preorder_print0(Tree* t);
 void preorder_print (Tree* t);
+
+bool next_tree(Tree* t);
+void reset_tree(Tree* t);
 
 #endif

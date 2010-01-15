@@ -32,6 +32,12 @@
  *
  *-------------------------------------------------------------------------
  */
+void calculate_level(Tree* t, int curr_level) {
+    t->level = curr_level++;
+    for (t = t->son; t; t = t->sib) 
+        calculate_level(t, curr_level);
+}
+
 void calculate_level_no(Tree* t, int* level_no, int& level_max) {
     t->level_no = level_no[t->level];
     level_no[t->level]++;
@@ -60,6 +66,9 @@ void draw_tree(Tree* t, Draw& d, double yunit) {
 }
 
 void Tree::print() {
+
+    calculate_level(this, 0);
+
     // calculate level_no 1st
     int level_no[64] = {0};
     int level_max = 0;
@@ -117,5 +126,77 @@ void preorder_print(Tree* t) {
             printf("%d ", t->no);
             nodes[c++] = t;
         }
+    }
+}
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * next_tree --
+ *      tree generation algorithm, this is an interesting algorithm, 
+ *      even if it's not fast, there are a lot of papers decribing
+ *      tree generation aglorithm in the last 40 years
+ *
+ * RETURN:
+ *      true - re adjust tree to next one
+ *      false - it's already the last tree
+ *
+ * PRE CONDTION:
+ *      t != 0
+ *
+ *-------------------------------------------------------------------------
+ */
+void reset_tree(Tree* t);
+bool next_tree(Tree* t) {
+    if (t->son == 0) 
+        return false;
+
+    for (Tree* s = t->son; s; s = s->sib) {
+        if (next_tree(s)) {
+            for (Tree* s2 = t->son; s2 != s; s2 = s2->sib) {
+                reset_tree(s2);
+            }
+            return true;
+        }
+    }
+
+    Tree* s = t->son;
+    while (s && s->son == 0) 
+        s = s->sib;
+
+    if (s == 0) 
+        return false; // already the last one
+
+    reset_tree(s);
+    Tree* extract = s->son;
+    s->son = extract->son;
+    extract->son = 0;
+    
+    if (s->sib == 0) 
+        s->sib = extract;
+    else {
+        s = s->sib;
+        if (s->son) 
+            reset_tree(s);
+        Tree* tmp = s->son;
+        s->son = extract;
+        extract->son = tmp;
+    }
+    return true;
+}
+
+/*
+ * reset t to a single path, actually it's DFS sequence path
+ */
+void reset_tree(Tree* t) {
+    Tree* s_sib;
+    for (Tree* s = t->son; s; s = s_sib) {
+        s_sib = s->sib;
+
+        if (s->son) reset_tree(s);
+        t->son = s;
+        t = t->son;
+        t->sib = 0;
+        while (t->son) t = t->son;
     }
 }
