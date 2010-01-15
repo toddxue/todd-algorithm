@@ -53,4 +53,7 @@ void reset_tree(Tree* t);
 void tree_preorder(Tree* t, int* o);
 void tree_preorder_recursive(Tree* t, int* o);
 
+void tree_postorder(Tree* t, int* o);
+void tree_postorder_recursive(Tree* t, int* o);
+
 #endif

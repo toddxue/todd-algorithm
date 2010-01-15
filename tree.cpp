@@ -245,3 +245,47 @@ void tree_preorder_recursive(Tree* t, int* o) {
     tree_preorder_recursive_internal(t, o);
 }
 
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * tree_postorder --
+ *      postorder tranverse
+ *
+ * POST CONDTION:
+ *      suppose n = number of vertices of tree t
+ *      o must at least contain n integers
+ * 
+ * NOTE:
+ *      the codes becomes obvious when we use the path concept
+ *      every path of tree is visited from leftest path to rigthtest
+ * 
+ *-------------------------------------------------------------------------
+ */
+void tree_postorder(Tree* t, int* o) {
+
+    int o_fill = 0;
+    Tree* nodes[1024];
+    int c = 0;
+    goto inner;
+    
+    while (c > 0) {
+        t = nodes[--c];
+        o[o_fill++] = t->no;
+        t = t->sib;
+    inner:
+        for (; t; t = t->son)
+            nodes[c++] = t;
+    }
+}
+
+void tree_postorder_recursive_internal(Tree* t, int*& o) {
+    Tree* saved = t;
+    for (t = t->son; t; t = t->sib)
+        tree_postorder_recursive_internal(t, o);
+    *o++ = saved->no;
+}
+void tree_postorder_recursive(Tree* t, int* o) {
+    tree_postorder_recursive_internal(t, o);
+}
+
