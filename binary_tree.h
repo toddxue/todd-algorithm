@@ -48,4 +48,13 @@ void Binary_Tree_parent_right(Binary_Tree* parent, Binary_Tree* son, int no) {
 void reset_binary_tree(Binary_Tree* t);
 bool next_binary_tree(Binary_Tree* t);
 
+void binary_tree_preorder(Binary_Tree* t, int* o);
+void binary_tree_preorder_recursive(Binary_Tree* t, int* o);
+
+void binary_tree_postorder(Binary_Tree* t, int* o);
+void binary_tree_postorder_recursive(Binary_Tree* t, int* o);
+
+void binary_tree_inorder(Binary_Tree* t, int* o);
+void binary_tree_inorder_recursive(Binary_Tree* t, int* o);
+
 #endif

@@ -181,3 +181,150 @@ void reset_binary_tree(Binary_Tree* t) {
         }
     }
 }
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * binary_tree_preorder --
+ *      preorder tranverse
+ *
+ * PRE CONDTION:
+ *      suppose n = number of vertices of binary_tree t
+ *      o must at least contain n integers
+ * 
+ * NOTE:
+ *      the codes becomes obvious when we use the path concept
+ *      every path of binary_tree is visited from leftest path to rigthtest
+ * 
+ *-------------------------------------------------------------------------
+ */
+void binary_tree_preorder(Binary_Tree* t, int* o) {
+
+    int o_fill = 0;
+    Binary_Tree* nodes[1024];
+    int c = 0;
+    goto inner;
+    
+    while (c > 0) {
+        t = nodes[--c]->right;
+    inner:
+        for (; t; t = t->left) {
+            o[o_fill++] = t->no;
+            if (t->right)
+                nodes[c++] = t;
+        }
+    }
+}
+
+void binary_tree_preorder_recursive_internal(Binary_Tree* t, int*& o) {
+    *o++ = t->no;
+    if (t->left)
+        binary_tree_preorder_recursive_internal(t->left, o);
+    if (t->right)
+        binary_tree_preorder_recursive_internal(t->right, o);
+}
+void binary_tree_preorder_recursive(Binary_Tree* t, int* o) {
+    binary_tree_preorder_recursive_internal(t, o);
+}
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * binary_tree_postorder --
+ *      postorder tranverse
+ *
+ * POST CONDTION:
+ *      suppose n = number of vertices of binary_tree t
+ *      o must at least contain n integers
+ * 
+ * NOTE:
+ *      the codes becomes obvious when we use the path concept
+ *      every path of binary_tree is visited from leftest path to rigthtest
+ *
+ *      The interesting part of this compared to the non-binary-tree version,
+ *      we see the benifits of son-sib representation
+ * 
+ *-------------------------------------------------------------------------
+ */
+void binary_tree_postorder(Binary_Tree* t, int* o) {
+
+    int o_fill = 0;
+    Binary_Tree* nodes[1024];
+    int c = 0;
+    Binary_Tree* prev_pop = 0;        
+
+    goto inner;
+    while (c > 0) {
+        t = nodes[c-1];
+        if (t->right == prev_pop || t->right == 0) {
+            o[o_fill++] = t->no;
+            --c;
+            prev_pop = t;
+            continue;
+        }
+        t = t->right;
+    inner:
+        for (; t; t = t->left)
+            nodes[c++] = t;
+    }
+}
+
+void binary_tree_postorder_recursive_internal(Binary_Tree* t, int*& o) {
+    Binary_Tree* saved = t;
+    if (t->left)
+        binary_tree_postorder_recursive_internal(t->left, o);
+    if (t->right)
+        binary_tree_postorder_recursive_internal(t->right, o);
+    *o++ = saved->no;
+}
+void binary_tree_postorder_recursive(Binary_Tree* t, int* o) {
+    binary_tree_postorder_recursive_internal(t, o);
+}
+
+
+/*
+ *-------------------------------------------------------------------------
+ *
+ * binary_tree_inorder --
+ *      inorder tranverse
+ *
+ * IN CONDTION:
+ *      suppose n = number of vertices of binary_tree t
+ *      o must at least contain n integers
+ * 
+ * NOTE:
+ *      the codes becomes obvious when we use the path concept
+ *      every path of binary_tree is visited from leftest path to rigthtest
+ * 
+ *-------------------------------------------------------------------------
+ */
+void binary_tree_inorder(Binary_Tree* t, int* o) {
+
+    int o_fill = 0;
+    Binary_Tree* nodes[1024];
+    int c = 0;
+
+    goto inner;
+    while (c > 0) {
+        t = nodes[--c];
+        o[o_fill++] = t->no;
+        t = t->right;
+    inner:
+        for (; t; t = t->left)
+            nodes[c++] = t;
+    }
+}
+
+void binary_tree_inorder_recursive_internal(Binary_Tree* t, int*& o) {
+    Binary_Tree* saved = t;
+    if (t->left)
+        binary_tree_inorder_recursive_internal(t->left, o);
+    *o++ = saved->no;
+    if (t->right)
+        binary_tree_inorder_recursive_internal(t->right, o);
+}
+void binary_tree_inorder_recursive(Binary_Tree* t, int* o) {
+    binary_tree_inorder_recursive_internal(t, o);
+}
+
+
