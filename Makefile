@@ -16,7 +16,7 @@ benchmark  = $(basename $(wildcard benchmark/*.cpp))
 $(benchmark) : $(TODDLIB)
 
 all        : $(TODDLIB) $(t_tests) $(benchmark)
-clean      : ; $(RM) -r $(TODDLIB) $(wildcard *.o) $(t_tests) $(benchmark) *.dSYM */*.dSYM */*.o */*/*.o
+clean      : ; $(RM) -r $(TODDLIB) $(wildcard *.o) $(t_tests) $(benchmark) *.dSYM */*.dSYM */*/*.dSYM */*.o */*/*.o
 
 t          : all; prove -rsj100 t/*/*.t
 d          : *.h *.cpp t/*/*.h t/*/*.cpp benchmark/*.cpp
