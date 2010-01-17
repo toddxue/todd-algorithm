@@ -144,61 +144,58 @@ void preorder_print(Tree* t) {
  * PRE CONDTION:
  *      t != 0
  *
+ * NOTE:
+ *      after we've binary-tree generation, we know this function is 
+ *      too complicated compared to that, since binary-tree have a 
+ *      1-1 map to son-sib tree, so for real, this function is not needed
+ *      but it seems it's too complicated it is, so let's switched to 
+ * 
  *-------------------------------------------------------------------------
  */
 void reset_tree(Tree* t);
-bool next_tree(Tree* t) {
-    if (t->son == 0) 
-        return false;
+bool next_tree_internal(Tree* t) {
+    Tree *son, *sib;
+    if ((son = t->son) && next_tree_internal(son))
+        return true;
 
-    for (Tree* s = t->son; s; s = s->sib) {
-        if (next_tree(s)) {
-            for (Tree* s2 = t->son; s2 != s; s2 = s2->sib) {
-                reset_tree(s2);
-            }
-            return true;
+    if ((sib = t->sib) && next_tree_internal(sib)) {
+        if (son) 
+            reset_tree(son);
+        return true;
+    }
+
+    if (son) {
+        reset_tree(son);
+        Tree* tmp = son;
+        t->son = tmp->son;
+        tmp->son = 0;
+        
+        if (!sib)
+            t->sib = tmp;
+        else {
+            reset_tree(sib);
+            tmp->son = sib;
+            t->sib = tmp;
         }
+        return true;
     }
-
-    Tree* s = t->son;
-    while (s && s->son == 0) 
-        s = s->sib;
-
-    if (s == 0) 
-        return false; // already the last one
-
-    reset_tree(s);
-    Tree* extract = s->son;
-    s->son = extract->son;
-    extract->son = 0;
-    
-    if (s->sib == 0) 
-        s->sib = extract;
-    else {
-        s = s->sib;
-        if (s->son) 
-            reset_tree(s);
-        Tree* tmp = s->son;
-        s->son = extract;
-        extract->son = tmp;
-    }
-    return true;
+    else
+        return false;
+}
+bool next_tree(Tree* t) {
+    return t->son ? next_tree_internal(t->son) : false;
 }
 
 /*
  * reset t to a single path, actually it's DFS sequence path
  */
 void reset_tree(Tree* t) {
-    Tree* s_sib;
-    for (Tree* s = t->son; s; s = s_sib) {
-        s_sib = s->sib;
-
-        if (s->son) reset_tree(s);
-        t->son = s;
-        t = t->son;
-        t->sib = 0;
-        while (t->son) t = t->son;
-    }
+    Tree *son, *sib;
+    if ((son = t->son)) reset_tree(son);
+    if ((sib = t->sib)) reset_tree(sib);
+    while (t->son) t = t->son;
+    t->son = sib;
+    t->sib = 0;
 }
 
 
