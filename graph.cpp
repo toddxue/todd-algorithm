@@ -17,7 +17,7 @@
  *
  *-------------------------------------------------------------------------
  */
-void Graph::print() {
+void Graph::print(char* title) {
     Draw d;
     for (int i = 0; i < vertices_c; ++i) {
         Vertex* v = vertices[i];
@@ -32,6 +32,8 @@ void Graph::print() {
         d.out(v->x, v->y, v->no);
     }
 
+    if (title)
+        d.out(2, 2, title);
     d.print();
 }
 
