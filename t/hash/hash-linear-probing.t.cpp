@@ -10,7 +10,7 @@ struct Elem {
 
 bool rcheck(int n, int c) {
     for (; c; --c) {
-        Elem** buckets = (Elem**)calloc(n, sizeof(Elem*));
+        Elem** buckets = (Elem**)xcalloc(n, sizeof(Elem*));
         int ec = random() % n;
         Elem* e = (Elem*)xmalloc(ec * sizeof(Elem));
 
