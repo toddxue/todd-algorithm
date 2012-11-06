@@ -6,6 +6,7 @@
 #include <sys/resource.h>
 #include <unistd.h>
 #include <limits.h>
+#include <time.h>
 
 extern size_t* g_xmem_pmalloced_size;
 
