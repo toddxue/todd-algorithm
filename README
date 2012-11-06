@@ -13,3 +13,5 @@ Some algorithm codes from Todd Xue
 	 To let prove run non perl script, `--exec "" ' is added into .proverc
 	     e.g. t/max/max.t here is a binary
 
+Mon Nov  5 21:21:54 PST 2012, continue...
+
