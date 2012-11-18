@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
             pat[i] = 'b' + random() % bound;
         pat[npat] = 0;
 
-        char *s1, *s2, *s3;
+        char const *s1, *s2, *s3;
         {
             TIMED_BLOCK_STDERR(strstr, true);
             s1 = mystrstr(a, pat);
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
             pat[i] = 'a' + random() % bound;
         pat[npat] = 0;
 
-        char *s1, *s2, *s3;
+        char const *s1, *s2, *s3;
         {
             TIMED_BLOCK_STDERR(samecharset_strstr, true);
             s1 = strstr(a, pat);

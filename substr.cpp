@@ -22,7 +22,7 @@
  *
  *-------------------------------------------------------------------------
  */
-char* substr0(int nstr, char* str, int npat, char* pat) {
+char const* substr0(int nstr, char const* str, int npat, char const* pat) {
     for (; nstr >= npat; --nstr, ++str) {
         if (0 == memcmp(str, pat, npat))
             return str;
@@ -36,7 +36,7 @@ char* substr0(int nstr, char* str, int npat, char* pat) {
  * but if the value (j-i), IT'S ALWAYS INCREASING
  * see comments below
  */
-void KMP_fail(int npat, char* pat, int* fail) {
+void KMP_fail(int npat, char const* pat, int* fail) {
     fail[0] = -1;
     int i;
     for (int j = 1; j < npat; ++j) {
@@ -64,7 +64,7 @@ void KMP_fail(int npat, char* pat, int* fail) {
      */
 }
 
-char* /*KMP_substr*/substr(int na, char* a, int npat, char* pat)  {
+char const* /*KMP_substr*/substr(int na, char const* a, int npat, char const* pat)  {
     int* fail = new int[npat];
     KMP_fail(npat, pat, fail);
     
@@ -132,11 +132,10 @@ char* /*KMP_substr*/substr(int na, char* a, int npat, char* pat)  {
  *
  *-------------------------------------------------------------------------
  */
-char *mystrstr(char *str, char *pat)
+char const* mystrstr(char const* str, char const* pat)
 {
-    char *s;
+    char const* s;
     int c;
-
     // build a mask
     unsigned int mask = 0;
     s = pat;
@@ -144,9 +143,9 @@ char *mystrstr(char *str, char *pat)
         mask |= 1 << (c & 31);
 
     int npat = strlen(pat);
-    char* start = str;
-    char* str_end = strchr(str, '\0');
-    char* end = str_end - npat;
+    char const* start = str;
+    char const* str_end = strchr(str, '\0');
+    char const* end = str_end - npat;
 
     // down
     int pat0 = *(int*)pat;
@@ -159,8 +158,8 @@ char *mystrstr(char *str, char *pat)
             continue;
         }
 
-        char* strp = str;
-        char* patp = pat;
+        char const* strp = str;
+        char const* patp = pat;
         do {
             if (!*patp)
                 return str;

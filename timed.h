@@ -86,7 +86,7 @@ struct ToddTime {
                       prompt, 
                       utime, 
                       stime, 
-                      (*g_xmem_pmalloced_size-xmem_malloced_size)
+                      (unsigned int)(*g_xmem_pmalloced_size-xmem_malloced_size)
                 );
         }
     }
@@ -143,12 +143,12 @@ struct ToddTimeClock {
             level() -= 3;
             FILE* stream = output == 1 ? stdout : stderr;
             ::fprintf(stream, 
-                      "%.*s[%-20s] %g ms/clock %du bytes/mem\n",
+                      "%.*s[%-20s] %g ms/clock %u bytes/mem\n",
                       level(), 
                       spaces(), 
                       prompt,
                       double(ticks)*1000/CLOCKS_PER_SEC,
-                      (*g_xmem_pmalloced_size-xmem_malloced_size)
+                      (unsigned int)(*g_xmem_pmalloced_size-xmem_malloced_size)
                 );
         }
     }

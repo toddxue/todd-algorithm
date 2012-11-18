@@ -10,7 +10,7 @@
  * OK routines to support Perl's TAP protocol
  */
 inline
-void _OK(bool ok, char* hint) {
+void _OK(bool ok, char const* hint) {
     static int global_cases;
     ++global_cases;
     if (ok)

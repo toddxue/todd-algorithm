@@ -16,8 +16,8 @@ bool rcheck(int nstr, int npat, int c) {
             pat[i] = 'a' + random() % 5;
         pat[npat] = 0;
 
-        char* r1 = mystrstr(str, pat);
-        char* r2 = substr(nstr, str, npat, pat);
+        char const* r1 = mystrstr(str, pat);
+        char const* r2 = substr(nstr, str, npat, pat);
     
         if (r1 != r2)
             return false;
@@ -30,7 +30,7 @@ bool rcheck(int nstr, int npat, int c) {
 int main(int argc, char* argv[]) {
     OK_SUM();
 
-    char* s = "abc";
+    char const* s = "abc";
 
     OK(0 == substr(3, "abc", 1, "d"));
     OK(s == substr(3, "abc", 1, "a"));

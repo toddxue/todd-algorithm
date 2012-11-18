@@ -76,7 +76,7 @@ struct Xmem {
         if (mmap_heads_c >= eMMAP_HEADS_MAX) {
             fprintf(stderr, 
                     "mmap_heads_c(%u) >= eMMAP_HEADS_MAX(%u)x\n", 
-                    mmap_heads_c, eMMAP_HEADS_MAX);
+                    (unsigned int)mmap_heads_c, eMMAP_HEADS_MAX);
             exit(1);
         }
         

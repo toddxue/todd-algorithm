@@ -111,7 +111,7 @@ struct Draw {
         return str[yy][xx];
     }
 
-    void out(int xx, int yy, char* text) {
+    void out(int xx, int yy, char const* text) {
         for (int i = xx; i < eX_MAX && *text; ++i) 
             str[yy][i] = *text++;
     }
@@ -123,7 +123,7 @@ struct Draw {
     }
 
     void print() {
-        printf("%.*s", sizeof(str), str);
+        printf("%.*s", int(sizeof(str)), (char const*)str);
     }
 
 };

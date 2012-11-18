@@ -10,9 +10,9 @@
 #ifndef _substr_h
 #define _substr_h
 
-char* substr(int nstr, char* str, int npat, char* pat);
-void KMP_fail(int npat, char* pat, int* fail);
+char const* substr(int nstr, char const* str, int npat, char const* pat);
+void KMP_fail(int npat, char const* pat, int* fail);
 
-char *mystrstr(char *str, char *pat);
+char const *mystrstr(char const* str, char const * pat);
 
 #endif
