@@ -8,8 +8,8 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    int n = strtol(argv[1], 0, 10);
-    int m = argc-2;
+    size_t n = strtol(argv[1], 0, 10);
+    size_t m = argc-2;
 
     int* vs = new int[m];
     int* a = new int[n];

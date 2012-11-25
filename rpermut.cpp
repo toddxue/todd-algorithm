@@ -1,7 +1,7 @@
 #include "rpermut.h"
 #include <stdio.h>
 
-bool rpermut_begin(int n, int* a, int m, int* vs)
+bool rpermut_begin(size_t n, int* a, size_t m, int* vs)
 {
     if (m == 0)
         return false;
@@ -11,7 +11,7 @@ bool rpermut_begin(int n, int* a, int m, int* vs)
     return true;
 }
 
-bool rpermut_next(int n, int* a, int m, int* vs)
+bool rpermut_next(size_t n, int* a, size_t m, int* vs)
 {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < m; ++j) {

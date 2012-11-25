@@ -12,7 +12,9 @@
 #ifndef _rpermut_h
 #define _rpermut_h
 
-bool rpermut_begin(int n, int* a, int m, int* vs);
-bool rpermut_next (int n, int* a, int m, int* vs);
+#include <stddef.h>
+
+bool rpermut_begin(size_t n, int* a, size_t m, int* vs);
+bool rpermut_next (size_t n, int* a, size_t m, int* vs);
 
 #endif
