@@ -39,6 +39,7 @@ bool rcheck(int n, int c) {
         xfree(e);
         xfree(buckets);
     }
+    return true;
 }
 
 
