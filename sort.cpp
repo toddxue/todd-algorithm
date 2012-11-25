@@ -154,3 +154,29 @@ int partition(int n, int* a, int pivot)
      */
     return left;
 }
+
+void sort_quick(int n, int* a)
+{
+    if (n <= 1) return;
+
+    int pivot = a[n-1];
+    int m = partition(n, a, pivot);
+
+    /**
+     * now a[0,m) <= pivot < a[m, n)
+     */
+
+    /**
+     * special case all <= pivot
+     */
+    if (m == n) {
+        sort_quick(n-1, a);
+        return;
+    }
+
+    /**
+     * m can't be 0 now since a[0,m) at least contain pivot, must be 0<m<n
+     */
+    sort_quick(m, a);
+    sort_quick(n-m, a+m);
+}
