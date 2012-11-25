@@ -16,7 +16,7 @@ bool rpermut_next(int n, int* a, int m, int* vs)
         for (int j = 0; j < m; ++j) {
             if (a[i] == vs[j] && j+1 < m) {
                 a[i] = vs[j+1];
-                for (int k = 0; k < i; ++i)
+                for (int k = 0; k < i; ++k)
                     a[k] = vs[0];
                 return true;
             }
