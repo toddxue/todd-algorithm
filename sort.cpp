@@ -124,7 +124,7 @@ int partition(int n, int* a, int pivot)
             continue;
         }
         
-        if (pivot >= a[right-1]) {
+        if (pivot < a[right-1]) {
             --right;
             continue;
         }
@@ -144,6 +144,7 @@ int partition(int n, int* a, int pivot)
              */
             ++left;
             --right;
+            continue;
         }
     }
     
