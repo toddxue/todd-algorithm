@@ -180,3 +180,52 @@ void sort_quick(int n, int* a)
     sort_quick(m, a);
     sort_quick(n-m, a+m);
 }
+
+/**
+ * merge sort
+ * buffer is the tricky part
+ */
+void sorted_merge(int n1, int* a1, int n2, int* a2, int* output)
+{
+    int output_i = 0;
+    int i1 = 0;
+    int i2 = 0;
+
+    while (i1 < n1 && i2 < n2) {
+        if (a1[i1] <= a2[i2])
+            output[output_i++] = a1[i1++];
+        else
+            output[output_i++] = a2[i2++];
+    }
+
+    if (i1 == n1) {
+        while (i2 < n2)
+            output[output_i++] = a2[i2++];
+    }
+    else {
+        while (i1 < n1)
+            output[output_i++] = a1[i1++];
+    }
+}
+
+void sort_merge_(int n, int* a, int* buffer)
+{
+    if (n <= 1)
+        return;
+
+    // [0, n) --> [0, middle) + [middle, n)
+    int middle = n/2;
+    sort_merge_(middle, a, buffer);
+    sort_merge_(n-middle, a+middle, buffer);
+
+    sorted_merge(middle, a, n-middle, a+middle, buffer);
+    for (int i = 0; i < n; ++i)
+        a[i] = buffer[i];
+}
+
+void sort_merge(int n, int* a)
+{
+    int* buffer = new int[n];
+    sort_merge_(n, a, buffer);
+    delete[] buffer;
+}
