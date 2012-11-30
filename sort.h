@@ -27,5 +27,7 @@ void sort_quick(int n, int* a);
  */
 void sorted_merge(int n1, int* a1, int n2, int* a2, int* output);
 void sort_merge(int n, int* a);
+int sorted_common_elements(int n1, int* a1, int n2, int* a2, int* out);
+int sorted_common_elements_brute_force(int n1, int* a1, int n2, int* a2, int* out);
 
 #endif

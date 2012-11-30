@@ -229,3 +229,55 @@ void sort_merge(int n, int* a)
     sort_merge_(n, a, buffer);
     delete[] buffer;
 }
+
+
+/**
+ * 
+ * a related to problem to find common element of 2 sorted array
+ * return value: the number of common elements which is stored inside out
+ *
+ * using merge logic
+ */
+int sorted_common_elements(int n1, int* a1, int n2, int* a2, int* out)
+{
+    int i1 = 0;
+    int i2 = 0;
+    int o_i = 0;
+    while (i1 < n1 && i2 < n2) {
+        int e1 = a1[i1];
+        int e2 = a2[i2];
+        if (e1 < e2)
+            ++i1;
+        else if (e2 < e1)
+            ++i2;
+        else {
+            out[o_i++] = e1;
+            ++i1;
+            ++i2;
+            while (i1 < n1 && a1[i1] == e1) ++i1;
+            while (i2 < n2 && a2[i2] == e1) ++i2;
+        }
+    }
+    return o_i;
+}
+
+/**
+ * a simple one
+ */
+int sorted_common_elements_brute_force(int n1, int* a1, int n2, int* a2, int* out)
+{
+    int o_i = 0;
+    for (int i1 = 0; i1 < n1; ++i1) {
+        int e1 = a1[i1];
+        for (int i2 = 0; i2 < n2; ++i2) {
+            int e2 = a2[i2];
+            if (e1 == e2) {
+                if (o_i == 0)
+                    out[o_i++] = e1;
+                else if (out[o_i-1] != e1)
+                    out[o_i++] = e1;
+            }
+        }
+    }
+    return o_i;
+}

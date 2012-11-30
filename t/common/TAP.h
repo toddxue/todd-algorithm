@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "xmem.h"
+#include "common.h"
 
 /**
  * OK routines to support Perl's TAP protocol
