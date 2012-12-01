@@ -6,12 +6,16 @@
 
 int main(int argc, char** argv)
 {
-    int seed = 0;
-    int c;
-    while ((c = getopt(argc, argv, "hs:(seed)")) != -1) {
-        switch (c) {
+    int opt_char;
+
+    /**
+     * long options is not portal using getopt, ignored.
+     */
+    while ((opt_char = getopt(argc, argv, "hs:")) != -1) {
+        switch (opt_char) {
         case 's': 
-            seed = strtol(optarg, 0, 10); 
+            int seed = strtol(optarg, 0, 10); 
+            srand(seed);
             break;
 
         case 'h': 
@@ -22,7 +26,6 @@ int main(int argc, char** argv)
             exit(1);
         }
     }
-    srand(seed);
 
     int len = argc-optind;
     int* a = new int[len];
