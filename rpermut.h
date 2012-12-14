@@ -17,4 +17,25 @@
 bool rpermut_begin(size_t n, int* a, size_t m, int* vs);
 bool rpermut_next (size_t n, int* a, size_t m, int* vs);
 
+/*
+ * a helper class for repeatable permuation
+ * usage like
+ * 
+ *   Rpermut rp(n, a, m, vs);
+ *   for (rp.begin(); !rp.ended; rp.next()
+ *      do something for (m, vs)
+ */
+struct Rpermut {
+    size_t n;
+    int* a;
+    size_t m;
+    int* vs;
+
+    bool ended;
+
+    Rpermut(size_t n, int* a, size_t m, int* vs) : n(n), a(a), m(m), vs(vs) {}
+    void begin() { ended = rpermut_begin(n, a, m, vs); }
+    void next () { ended = rpermut_next(n, a, m, vs); }
+};
+
 #endif
