@@ -43,18 +43,12 @@ int main(int argc, char* argv[]) {
     OK(verify_brute_force_partition(3));
     OK(verify_brute_force_partition(4));
     OK(verify_brute_force_partition(5));
-    OK(verify_brute_force_partition(6));
-    OK(verify_brute_force_partition(7));
-    OK(verify_brute_force_partition(8));
     
     OK(verify_partition(1));
     OK(verify_partition(2));
     OK(verify_partition(3));
     OK(verify_partition(4));
     OK(verify_partition(5));
-    OK(verify_partition(6));
-    OK(verify_partition(7));
-    OK(verify_partition(8));
 
     return 0;
 }
