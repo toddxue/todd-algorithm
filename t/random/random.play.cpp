@@ -21,9 +21,11 @@ int main(int argc, char** argv)
     while ((opt_char = getopt(argc, argv, "hs:a:")) != -1) {
         switch (opt_char) {
         case 's': 
+            {
             int seed = strtol(optarg, 0, 10); 
             srand(seed);
             break;
+            }
 
         case 'a':
             switch (*optarg) {
