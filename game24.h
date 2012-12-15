@@ -21,7 +21,7 @@ namespace game24 {
      * -: (a, b) -> a-b
      * -r: (a,b) -> b-a
      *
-     * the next steps are basically we only have 2 forms of expression:
+     * the next steps are basically we only have 5 forms of expression:
      *
      *  form1: ((a ? b) ? c) ? d) 
      *  form2: (a ? (b ? c)) ? d) 
