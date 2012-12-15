@@ -58,6 +58,10 @@ namespace game24 {
         if (b > c && op2 == '+' || op2 == '*')
             return false;
 
+        // already covered by form2 in this case
+        if (op1 == '+' || op1 == '*')
+            return false;
+
         bool div_zero = false;
         double r = eval(op3, eval(op1, a, eval(op2, b, c, &div_zero), &div_zero), d, &div_zero);
         if (!div_zero && eq(r, 24)) {
@@ -92,6 +96,10 @@ namespace game24 {
         if (b > c && op2 == '+' || op2 == '*')
             return false;
 
+        // already covered by form1 in this case
+        if (op1 == '+' || op1 == '*')
+            return false;
+
         bool div_zero = false;
         double r = eval(op1, a, eval(op3, eval(op2, b, c, &div_zero), d, &div_zero), &div_zero);
         if (!div_zero && eq(r, 24)) {
@@ -105,6 +113,14 @@ namespace game24 {
     bool form5(int a, int b, int c, int d, int op1, int op2, int op3) {
         // a op1 (b op2 (c op3 d))
         if (c > d && op3 == '+' || op3 == '*')
+            return false;
+
+        // already covered by form1 in this case
+        if (op1 == '+' || op1 == '*')
+            return false;
+
+        // already covered by form4 in this case
+        if (op2 == '+' || op2 == '*')
             return false;
 
         bool div_zero = false;
