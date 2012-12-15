@@ -16,6 +16,9 @@ namespace game24 {
      */
 
     inline
+    bool swapable(int op) { return op == '*' || op == '+'; }
+    
+    inline
     bool eq(double a, double b) { return (a-b) * (a-b) < 0.01; }
 
     inline
@@ -40,7 +43,7 @@ namespace game24 {
     inline
     bool form1(int a, int b, int c, int d, int op1, int op2, int op3) {
         // ((a op1 b) op2 c) op3 d
-        if (a > b && op1 == '+' || op2 == '*')
+        if (a > b && swapable(op1))
             return false;
 
         bool div_zero = false;
@@ -55,11 +58,11 @@ namespace game24 {
     inline
     bool form2(int a, int b, int c, int d, int op1, int op2, int op3) {
         // (a op1 (b op2 c)) op3 d
-        if (b > c && op2 == '+' || op2 == '*')
+        if (b > c && swapable(op2))
             return false;
 
         // already covered by form2 in this case
-        if (op1 == '+' || op1 == '*')
+        if (swapable(op1))
             return false;
 
         bool div_zero = false;
@@ -75,10 +78,10 @@ namespace game24 {
     inline
     bool form3(int a, int b, int c, int d, int op1, int op2, int op3) {
         // (a op1 b) op2 (c op3 d)
-        if (a > b && op1 == '+' || op1 == '*')
+        if (a > b && swapable(op1))
             return false;
 
-        if (c > d && op3 == '+' || op3 == '*')
+        if (c > d && swapable(op3))
             return false;
 
         bool div_zero = false;
@@ -93,11 +96,11 @@ namespace game24 {
     inline
     bool form4(int a, int b, int c, int d, int op1, int op2, int op3) {
         // a op1 ((b op2 c) op3 d)
-        if (b > c && op2 == '+' || op2 == '*')
+        if (b > c && swapable(op2))
             return false;
 
         // already covered by form1 in this case
-        if (op1 == '+' || op1 == '*')
+        if (swapable(op1))
             return false;
 
         bool div_zero = false;
@@ -112,15 +115,15 @@ namespace game24 {
     inline
     bool form5(int a, int b, int c, int d, int op1, int op2, int op3) {
         // a op1 (b op2 (c op3 d))
-        if (c > d && op3 == '+' || op3 == '*')
+        if (c > d && swapable(op3))
             return false;
 
         // already covered by form1 in this case
-        if (op1 == '+' || op1 == '*')
+        if (swapable(op1))
             return false;
 
         // already covered by form4 in this case
-        if (op2 == '+' || op2 == '*')
+        if (swapable(op2))
             return false;
 
         bool div_zero = false;
