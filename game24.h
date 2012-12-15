@@ -55,15 +55,15 @@ namespace game24 {
     };
     
     static int ops[op_max] = { op_add, op_sub, op_subr, op_mul, op_div, op_divr };
-    static char const* op_strs[op_max] = { "+", "-", "-r", "x", "/", "/r" };
+    static char const* op_strs[op_max] = { "+", "-", "-r", "*", "/", "/r" };
 
     inline
-    int op_eval(int op, int a, int b, bool* div_zero) {
+    double op_eval(int op, double a, double b, bool* div_zero) {
         switch (op) {
         case op_add:  return a + b;
         case op_sub:  return a - b;
         case op_subr: return b - a;
-        case op_mul:  return a + b;
+        case op_mul:  return a * b;
 
         case op_div:  
             if (b == 0) {

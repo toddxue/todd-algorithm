@@ -34,8 +34,8 @@ struct Rpermut {
     bool ended;
 
     Rpermut(size_t n, int* a, size_t m, int* vs) : n(n), a(a), m(m), vs(vs) {}
-    void begin() { ended = rpermut_begin(n, a, m, vs); }
-    void next () { ended = rpermut_next(n, a, m, vs); }
+    void begin() { ended = !rpermut_begin(n, a, m, vs); }
+    void next () { ended = !rpermut_next(n, a, m, vs); }
 };
 
 #endif
