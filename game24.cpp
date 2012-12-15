@@ -14,14 +14,115 @@ namespace game24 {
      *        if (24 == (a op1 b) op2 (c op3 d))
      *            output "(a op1 b) op2 (c op3 d)"
      */
-    
+
+    inline
     bool eq(double a, double b) { return (a-b) * (a-b) < 0.01; }
+
+    inline
+    double eval(int op, double a, double b, bool* div_zero) {
+        switch (op) {
+        case '+':  return a + b;
+        case '-':  return a - b;
+        case '*':  return a * b;
+        case '/':  
+            if (b == 0) {
+                *div_zero = true;
+                return 0;
+            }
+            else 
+                return a / b;
+        default:
+            throw "bad things happened";
+        }
+        return 0; /** never reach here **/
+    }
+
+    inline
+    bool form1(int a, int b, int c, int d, int op1, int op2, int op3) {
+        // ((a op1 b) op2 c) op3 d
+        if (a > b && op1 == '+' || op2 == '*')
+            return false;
+
+        bool div_zero = false;
+        double r = eval(op3, eval(op2, eval(op1, a, b, &div_zero), c, &div_zero), d, &div_zero);
+        if (!div_zero && eq(r, 24)) {
+            fprintf(stdout, "((%d %c %d) %c %d) %c %d\n", a, char(op1), b, char(op2), c, char(op3), d);
+            return true;
+        }
+        return false;
+    }
+
+    inline
+    bool form2(int a, int b, int c, int d, int op1, int op2, int op3) {
+        // (a op1 (b op2 c)) op3 d
+        if (b > c && op2 == '+' || op2 == '*')
+            return false;
+
+        bool div_zero = false;
+        double r = eval(op3, eval(op1, a, eval(op2, b, c, &div_zero), &div_zero), d, &div_zero);
+        if (!div_zero && eq(r, 24)) {
+            fprintf(stdout, "(%d %c (%d %c %d)) %c %d\n", a, char(op1), b, char(op2), c, char(op3), d);
+            return true;
+        }
+        return false;
+    }
+
+
+    inline
+    bool form3(int a, int b, int c, int d, int op1, int op2, int op3) {
+        // (a op1 b) op2 (c op3 d)
+        if (a > b && op1 == '+' || op1 == '*')
+            return false;
+
+        if (c > d && op3 == '+' || op3 == '*')
+            return false;
+
+        bool div_zero = false;
+        double r = eval(op2, eval(op1, a, b, &div_zero), eval(op3, c, d, &div_zero), &div_zero);
+        if (!div_zero && eq(r, 24)) {
+            fprintf(stdout, "(%d %c %d) %c (%d %c %d)\n", a, char(op1), b, char(op2), c, char(op3), d);
+            return true;
+        }
+        return false;
+    }
+
+    inline
+    bool form4(int a, int b, int c, int d, int op1, int op2, int op3) {
+        // a op1 ((b op2 c) op3 d)
+        if (b > c && op2 == '+' || op2 == '*')
+            return false;
+
+        bool div_zero = false;
+        double r = eval(op1, a, eval(op3, eval(op2, b, c, &div_zero), d, &div_zero), &div_zero);
+        if (!div_zero && eq(r, 24)) {
+            fprintf(stdout, "%d %c ((%d %c %d) %c %d)\n", a, char(op1), b, char(op2), c, char(op3), d);
+            return true;
+        }
+        return false;
+    }
+
+    inline
+    bool form5(int a, int b, int c, int d, int op1, int op2, int op3) {
+        // a op1 (b op2 (c op3 d))
+        if (c > d && op3 == '+' || op3 == '*')
+            return false;
+
+        bool div_zero = false;
+        double r = eval(op1, a, eval(op2, b, eval(op3, c, d, &div_zero), &div_zero), &div_zero);
+        if (!div_zero && eq(r, 24)) {
+            fprintf(stdout, "%d %c (%d %c (%d %c %d))\n", a, char(op1), b, char(op2), c, char(op3), d);
+            return true;
+        }
+        return false;
+    }
+
     
     bool exprs_for_24(int a1, int a2, int a3, int a4)
     {
         int ar[4] = {a1, a2, a3, a4};
         sort_quick(4, ar);
-        
+
+        int ops[4] = {'+', '-', '*', '/'}; 
         int opr[3];
         Rpermut rp(3, opr, sizeof(ops)/sizeof(int), ops);
 
@@ -42,18 +143,12 @@ namespace game24 {
                 op2 = opr[1];
                 op3 = opr[2];
 
-                // fprintf(stderr, "trying %d %s (%d %s (%d %s %d))\n", a, op_strs[op1], b, op_strs[op2], c, op_strs[op3], d);
-                bool div_zero = false;
-                if (eq(24, op_eval(op1, a, op_eval(op2, b, op_eval(op3, c, d, &div_zero), &div_zero), &div_zero)) && div_zero == false) {
-                    fprintf(stdout, "%d %s (%d %s (%d %s %d))\n", a, op_strs[op1], b, op_strs[op2], c, op_strs[op3], d);
+                if (form1(a, b, c, d, op1, op2, op3) ||
+                    form2(a, b, c, d, op1, op2, op3) ||
+                    form3(a, b, c, d, op1, op2, op3) ||
+                    form4(a, b, c, d, op1, op2, op3) ||
+                    form5(a, b, c, d, op1, op2, op3))
                     found = true;
-                }
-
-                // fprintf(stderr, "trying (%d %s %d) %s (%d %s %d)\n", a, op_strs[op1], b, op_strs[op2], c, op_strs[op3], d);
-                if (eq(24, op_eval(op2, op_eval(op1, a, b, &div_zero), op_eval(op3, c, d, &div_zero), &div_zero)) && div_zero == false) {
-                    fprintf(stdout, "(%d %s %d) %s (%d %s %d)\n", a, op_strs[op1], b, op_strs[op2], c, op_strs[op3], d);
-                    found = true;
-                }
             }
         }
 
