@@ -1,6 +1,6 @@
 #include "shuffle.h"
 
-namespace shuffle { namespace in_suffle {
+namespace shuffle { namespace in_shuffle {
 
         /**
          * 1st one: devide and conqer suggested by Leo Zhu

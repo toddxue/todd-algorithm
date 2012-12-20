@@ -4,6 +4,11 @@
 
 int main(int argc, char* argv[]) {
     int n = argc-1;
+    if (n % 2 != 0) {
+        fprintf(stderr, "expect even numbers of integers\n");
+        return 1;
+    }
+
     int* a = new int[n];
 
     for (int i = 1; i < argc; ++i)
