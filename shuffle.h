@@ -51,12 +51,7 @@ namespace shuffle {
         void devide_and_conquer(int n, int* a);
 
         /**
-         * 2nd one: cycle heads, lookup all cycle heads, and do cycle by cycle 
-         */
-        void cycle_heads(int n, int* a);
-
-        /**
-         * 3rd one: primitive root: 2 is primitive of 3^K
+         * 2rd one: 2 is primitive root of prime P where P is very close to n
          */
         void primitive_root(int n, int* a); 
     }
