@@ -1,5 +1,15 @@
 #! /usr/bin/perl
 
+#
+# Todd Xue at Fri Dec 21 14:39:40 PST 2012
+#
+# Reference:
+#   1. GNU coreutils factor command: The Pollard Rho algorithm
+#   2. Primes p Such That 2 is a Primitive Root Modulo p: http://homepages.math.uic.edu/~rfuller/primroot2.pdf
+#
+# Ideally with 64 bit Perl, we can get all primes close to 2^1, ..., 2^63, 2^64
+# 
+
 use strict;
 use warnings;
 
