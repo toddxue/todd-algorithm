@@ -53,7 +53,34 @@ namespace shuffle {
         /**
          * 2rd one: 2 is primitive root of prime P where P is very close to n
          */
-        void primitive_root(int n, int* a); 
+        void primitive_root(int n, int* a);
+
+        /**
+         * NOTE:
+         * 
+         * Performance:
+         *   The 2nd one is linear algorithm which is far faster than the 1st one
+         *   
+         *   >t/shuffle/in-shuffle.play benchmark p {1..42346}  >/dev/null
+         *   0.678ms/user
+         *  
+         *   >t/shuffle/in-shuffle.play benchmark {1..42346}  >/dev/null
+         *   2.621ms/user
+         *
+         * As n doubled, it'll become 10 times faster, then 20, 40, ... until inplace shuffle becomes meanless 
+         * since no memory can hold them all :)
+         * 
+         * About primitive_root
+         *   There are lot of alternatives, e.g. 
+         *   1. Choose n=3^K+1, there are K cycles
+         *      "A Simple In-Place Algorithm for In-Shuffle"
+         *      FROM Peiyush Jain, Microsoft Corporation. July 2004
+         *   2. General Cycle heads study: 
+         *      "Computing the Cycles in the Perfect Shuffle Permutation"
+         *      FROM JOHN ELLIS, TOBIAS KRAHN, HONGBING FAN, May 2000
+         * 
+         *
+         */
     }
 }
 

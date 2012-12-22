@@ -57,9 +57,9 @@ namespace shuffle { namespace in_shuffle {
              */
             int pos = 1;
             int pos_value = a[pos];
-            for (int i = 1; i <= p-2; ++i) {
+            for (int i = 1; i <= p-1; ++i) {
 
-                int pos_next = n * 2 % p;
+                int pos_next = pos * 2 % p;
                 int pos_next_value = a[pos_next];
 
                 a[pos_next] = pos_value;
