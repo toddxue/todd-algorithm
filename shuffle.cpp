@@ -57,15 +57,11 @@ namespace shuffle { namespace in_shuffle {
              */
             int pos = 1;
             int pos_value = a[pos];
-            for (int i = 1; i <= p-1; ++i) {
-
-                int pos_next = pos * 2 % p;
-                int pos_next_value = a[pos_next];
-
-                a[pos_next] = pos_value;
-                pos = pos_next;
-                pos_value = pos_next_value;
-            }
+            
+            do {
+                pos = pos * 2 % p;
+                swap(pos_value, a[pos]);
+            } while (pos != 1);
         }
 
 
@@ -100,8 +96,8 @@ namespace shuffle { namespace in_shuffle {
              *           ^^^^^^^^^^^^^^^^^
              */
             shift_right(r+l, a+l, l);
-            primitive_root_prime(p + 1, a);
-            primitive_root(n - (p + 1), a);
+            primitive_root_prime(l+l, a);
+            primitive_root(r+r, a+l+l);
         }
 
     }
