@@ -5,12 +5,14 @@
 t/*/*~
 t/*/*o
 t/*/*.t
-t/*/*.play
-play/*/*.play
 t/*/*.dSYM
 benchmark/*~
 benchmark/*o
 benchmark/*.b
 benchmark/*.dSYM
+play/*/*~
+play/*/*o
+play/*/*.play
+play/*/*.dSYM
 *.stackdump
 temp.*
