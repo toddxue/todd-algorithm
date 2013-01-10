@@ -281,3 +281,25 @@ int sorted_common_elements_brute_force(int n1, int* a1, int n2, int* a2, int* ou
     }
     return o_i;
 }
+
+/**
+ * insert sort to calculate the reverse number
+ */
+int insert_sort(int n, int* a)
+{
+    int reverse_count = 0;
+    for (int j = 1; j < n; ++j) {
+        int i = j-1;
+        int a_j = a[j];
+        if (a[i] > a_j) {
+            do {
+                a[i+1] = a[i];
+                ++reverse_count;
+                --i;
+            } 
+            while (i >= 0 && a[i] >= a_j);
+            a[i+1] = a_j;
+        }
+    }
+    return reverse_count;
+}
