@@ -15,11 +15,15 @@ $(t_tests) : $(TODDLIB)
 benchmark  = $(basename $(wildcard benchmark/*.cpp))
 $(benchmark) : $(TODDLIB)
 
-all        : $(TODDLIB) $(t_tests) $(benchmark)
-clean      : ; $(RM) -r $(TODDLIB) $(wildcard *.o) $(t_tests) $(benchmark) *.dSYM */*.dSYM */*/*.dSYM */*.o */*/*.o
+play  = $(basename $(wildcard play/*/*.cpp))
+$(play) : $(TODDLIB)
+
+
+all        : $(TODDLIB) $(t_tests) $(benchmark) $(play)
+clean      : ; $(RM) -r $(TODDLIB) $(wildcard *.o) $(t_tests) $(benchmark) $(play) *.dSYM */*.dSYM */*/*.dSYM */*.o */*/*.o
 
 t          : all; prove t/*/*.t -rsj100
-d          : *.h *.cpp t/*/*.h t/*/*.cpp benchmark/*.cpp
+d          : *.h *.cpp t/*/*.h t/*/*.cpp benchmark/*.cpp play/*/*.cpp
 	g++ -MM -MG $(CPPFLAGS) $^ | \
 	perl -i -lpe 's{^(\S+?).o:\s+(\S+?)\1.cpp}{$$2$$&}' > .depend
 -include .depend
