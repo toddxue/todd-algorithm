@@ -105,6 +105,6 @@ Not necessary better algorithm, only C is just far faster than JAVA. Also severa
   2. If N = P^n, than we've O(n^2) algorithms using dynamic programming
   3. In the case #2, it's equalivalent to traditional partition problem we've formula from Euler/Hardy/ramanujan
   4. Factoring N first may speed up, will try to see how faster 
-  5. Anyway, this is not a good interview question, be not too naive to interview this one to others :)
+  5. This is not a very good question to ask since good solution/understanding is too hard/complicated.
 
 */
