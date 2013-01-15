@@ -104,7 +104,43 @@ Not necessary better algorithm, only C is just far faster than JAVA. Also severa
   1. Factorization is NP problem, so no very efficient algorithms so far found yet
   2. If N = P^n, than we've O(n^2) algorithms using dynamic programming
   3. In the case #2, it's equalivalent to traditional partition problem we've formula from Euler/Hardy/ramanujan
+     First 20 partitons number given by:
+        >for i in {1..30}; do echo -n "$i: "; play/number/make-multiplication.play $((2**$i)) | wc -l; done
+        1: 1
+        2: 2
+        3: 3
+        4: 5
+        5: 7
+        6: 11
+        7: 15
+        8: 22
+        9: 30
+        10: 42
+        11: 56
+        12: 77
+        13: 101
+        14: 135
+        15: 176
+        16: 231
+        17: 297
+        18: 385
+        19: 490
+        20: 627
+        21: 792
+        22: 1002
+        23: 1255
+        24: 1575
+        25: 1958
+        26: 2436
+        27: 3010
+        28: 3718
+        29: 4565
+        30: 5604
+     Reference to http://oeis.org/A000041
+    
   4. Factoring N first may speed up, will try to see how faster 
   5. This is not a very good question to ask since good solution/understanding is too hard/complicated.
+
+
 
 */
