@@ -16,7 +16,7 @@ namespace palindrome {
      */
     void max_substr_simple(int n, char const* s, char const*& pb, char const*& pe);
     void max_substr_center(int n, char const* s, char const*& pb, char const*& pe);
-    void max_substr_Manacher(int n, char const* s, char const*& pb, char const*& pe);
+    void max_substr_Manacher(int n, char const* s, char const*& pb, char const*& pe, int* buffer);
 }
 
 

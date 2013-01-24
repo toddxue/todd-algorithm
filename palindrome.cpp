@@ -50,6 +50,8 @@ namespace palindrome {
      *   dynamic programming can achieve same O(n^2), 
      *   but ..hmm... need additional O(n^2) space ;)
      * 
+     * Usually this one works almost linear, but jumps to n^2 quickly when most characters are same :(
+     * then Manacher's algorithm really shines.
      */
     void max_substr_center(int n, char const* s, char const*& pb, char const*& pe)
     {
@@ -87,7 +89,7 @@ namespace palindrome {
      * 
      * version only covers center on characters, not middle of them
      */
-    void max_substr_Manacher(int n, char const* s, char const*& pb, char const*& pe)
+    void max_substr_Manacher(int n, char const* s, char const*& pb, char const*& pe, int* buffer)
     {
         char const* end = s + n-1;
         pb = pe = s;
@@ -105,8 +107,9 @@ namespace palindrome {
          *
          * at each steps, we either move center or right, so at most took 2*n steps 
          */
-        int* radius = new int[n];
-        ARRMEM_GUARD(int, radius);
+        //int* radius = new int[n];
+        //ARRMEM_GUARD(int, radius);
+        int* radius = buffer;
 
         char const* big_center = s;
         int big_radius = 0;

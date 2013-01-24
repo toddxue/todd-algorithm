@@ -1,6 +1,7 @@
-#include "palindrome.h"
 #include <string.h>
 #include <stdio.h>
+#include "common.h"
+#include "palindrome.h"
 
 int main(int argc, char* argv[]) {
 
@@ -11,8 +12,14 @@ int main(int argc, char* argv[]) {
     char const* s = argv[1];
     char const* pb;
     char const* pe;
+    int* buffer = new int[n];
+    ARRMEM_GUARD(int, buffer);
     
-    palindrome::max_substr_simple(n, s, pb, pe);
+    for (int i = 0; i < 1000; ++i) {
+        palindrome::max_substr_Manacher(n, s, pb, pe, buffer);
+        //palindrome::max_substr_center(n, s, pb, pe);
+        //palindrome::max_substr_simple(n, s, pb, pe);
+    }
 
     printf("%.*s\n", int(pe-pb), pb);
     return 0;
