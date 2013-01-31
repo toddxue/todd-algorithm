@@ -25,4 +25,13 @@ int max_common_sub_sequence(int na, int* a, int nb, int* b, int* sub);
 int max_increase_sequence(int na, int* a, int* sub);
 int max_increase_sequence_count(int na, int* a);
 
+/**
+ * max distance less than: max{ j-i | 0 <= i < j < n and a_i < a_j}
+ * e.g.
+ *   2 5 4 3 2 1
+ * --> 3
+ */
+int max_distance_less_than_brute_force(int n, int* a);
+int max_distance_less_than_linear_time(int n, int* a);
+
 #endif

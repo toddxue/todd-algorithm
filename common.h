@@ -19,4 +19,6 @@ template <typename T> struct arrmem_guard {
 };
 #define ARRMEM_GUARD(T, p) arrmem_guard<T> ARRMEM_GUARD_##_p(p);
 
+inline void reverse(int n, int* b) { for (int* e = b + n - 1; b < e; ++b, --e) { int tmp = *b; *b = *e; *e = tmp; } }
+
 #endif

@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "max.h"
 #include "hash.h"
+#include "common.h"
 
 /*
  *-------------------------------------------------------------------------
@@ -650,5 +651,98 @@ int max_increase_sequence(int na, int* a, int* sub) {
     delete[] min_tail;
     delete[] free_nodes;
     return min_tail_c;
+}
+
+
+
+/**
+ * max distance less than: max{ j-i | 0 <= i < j < n and a_i < a_j}
+ * e.g.
+ *   2 5 4 3 2 1
+ * --> 3
+ *
+ * return -1 if empty
+ */
+
+int max_distance_less_than_brute_force(int n, int* a)
+{
+    int max_d = -1;
+    for (int i = 0; i < n; ++i)
+        for (int j = i+1; j < n; ++j)
+            if (a[i] < a[j])
+                if (j-i > max_d) 
+                    max_d = j-i;
+
+    return max_d;
+}
+
+
+/**
+ * Range model calculation 
+ * [begin, end]
+ *
+ * either ++begin, or ++end, so at most 2*n calculation
+ */
+int max_distance_less_than_linear_time(int n, int* a)
+{
+    /**
+     *  PHASE 1: build 2 sub arrays 
+     * 
+     * array1: decreasing value sub array started from a[0] 
+     * array2: increasing value sub array started from at[n-1] 
+     *
+     * 
+     * example sequence:
+     * 
+     *    5 3 1 6 4 2
+     *
+     * array1: 5 3 1
+     * array2: 6 4 2
+     * 
+     */
+    int* a1 = new int[n];
+    a1[0] = 0;
+    int a1_c = 1;
+    for (int i = 1; i < n; ++i)
+        if (a[i] <= a[a1[a1_c - 1]])
+            a1[a1_c++] = i;
+    if (a1_c == n)
+        return -1;
+
+    int* a2 = new int[n];
+    int a2_c = 1;
+    a2[0] = n-1;
+    for (int i = n-2; i >= 0; --i)
+        if (a[i] >= a[a2[a2_c - 1]])
+            a2[a2_c++] = i;
+    reverse(a2_c, a2);
+    
+    /**
+     * PHASE 2: build initial range
+     * 
+     * now a2[0] is the maximum value pos
+     */
+    int begin = 0;
+    int end = 0;
+    int max_d = a2[end] - a1[begin];
+
+    while (begin < a1_c && end < a2_c) {
+
+        /**
+         * move right first
+         */
+        if (end + 1 < a2_c && a[a2[end+1]] > a[a1[begin]])
+            ++end;
+        else
+            ++begin;
+
+        if (a[a2[end]] > a[a1[begin]])
+            if (a2[end] - a1[begin] > max_d)
+                max_d = a2[end] - a1[begin];
+    }
+    delete[] a1;
+    delete[] a2;
+    
+    return max_d;
 }
 
