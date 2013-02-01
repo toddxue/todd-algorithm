@@ -22,6 +22,24 @@ namespace bits {
      * so stupid for this one
      */
     inline uint add(uint a, uint b) { if (b == 0) return a; uint sum = a ^ b; uint carry = ((a & b) << 1); return add(sum, carry); }
+    
+    /**
+     * compare without using > < operator, but can C operators: -, bits
+     */
+    inline bool lt(uint a, uint b) { return (a - b) & (1 << 31); }
+    inline bool gt(uint a, uint b) { return !lt(a, b); }
+    inline uint max(uint a, uint b) { return lt(a,b) ? b : a; }
+    inline uint min(uint a, uint b) { return a + b - max(a, b); }
+
+    /**
+     * swap using ^ and |, in Z/2, it's same as -, +
+     * (a, b) -> (a-b, b) -> (a-b, a) -> (b, a)
+     */
+    inline void swap(uint& a, uint& b) { 
+        a = a ^ b; 
+        b = b | a; 
+        a = a ^ b; 
+    }
 
     /**
      * using bit to decide if a uinteger is power of 2
@@ -114,7 +132,7 @@ namespace bits {
      * previous largest number with same number of 1 bits
      * return 0 if there is no next number
      * 
-     * the reverse of next_smallest, turns out simpler :)
+     * the reverse of next_smallest, turns out a simpler :)
      */
     inline uint prev_largest(uint a) { return ~next_smallest(~a); }
 }

@@ -1,6 +1,15 @@
 #include "TAP.h"
 #include "bits.h"
 
+typedef bits::uint uint;
+static bool swap_test(uint a, uint b) { 
+    uint a2 = a; 
+    uint b2 = b;
+    bits::swap(a2, b2);
+    return a2 == b && b2 == a;
+}
+
+
 int main(int argc, char* argv[]) {
     OK_SUM();
 
@@ -11,6 +20,20 @@ int main(int argc, char* argv[]) {
     OK(bits::add(1, 2) == 3);
     OK(bits::add(1, 3) == 4);
     OK(bits::add(123, 456) == 579);
+
+    OK(bits::gt(123, 456) == false);
+    OK(bits::lt(123, 456) == true);
+
+    OK(bits::gt(456, 123) == true);
+    OK(bits::lt(456, 123) == false);
+
+    OK(bits::max(123, 456) == 456);
+    OK(bits::min(123, 456) == 123);
+    OK(bits::max(456, 123) == 456);
+    OK(bits::min(456, 123) == 123);
+
+    OK(swap_test(123, 456));
+    OK(swap_test(456, 123));
 
     OK(bits::is_2_power(0));
     OK(bits::is_2_power(1));
