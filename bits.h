@@ -3,7 +3,7 @@
  *
  * algorithms related to the calculation of the bits
  *
- * 2009/12/26: initial release by Todd Xue
+ * Fri Feb  1 10:25:43 PST 2013: initial release by Todd Xue
  */
 
 #ifndef _bits_h
