@@ -44,6 +44,8 @@ namespace knapsack {
                     out[i] = a[i];
                 return n;
             }
+            
+            //max = target_sum + 1; // to same some space
                 
             /**
              * dynamic memory matrix:
@@ -65,23 +67,19 @@ namespace knapsack {
                  */
                 int sum = 0;
                 for (; sum <= target_sum; ++sum) {
+                    Matrix[sum * n + i] = -2;
                     int prev_sum = sum - a[i];
-                    if (prev_sum < 0) {
-                        Matrix[sum * n + i] = -2;
-                    }
-                    else if (prev_sum == 0) {
+
+                    if (prev_sum == 0)
                         Matrix[sum * n + i] = -1;
-                    }
-                    else {
+
+                    else if(prev_sum > 0)
                         /**
                          * find if prev_sum exists in a[0..i)
                          */
-                        for (int j = 0; j < i; ++j) {
-                            if (Matrix[prev_sum * n + j] == prev_sum) {
+                        for (int j = 0; j < i; ++j)
+                            if (Matrix[prev_sum * n + j] >= -1)
                                 Matrix[sum * n + i] = j;
-                            }
-                        }
-                    }
                 }
 
                 if (Matrix[target_sum * n + i] >= -1) {
@@ -91,10 +89,12 @@ namespace knapsack {
                     out[out_c++] = a[i];
 
                     int curr = i;
+                    int sum = target_sum;
                     int prev;
-                    while ((prev = Matrix[target_sum * n + curr]) >= 0) {
+                    while ((prev = Matrix[sum * n + curr]) >= 0) {
                         out[out_c++] = a[prev];
                         curr = prev;
+                        sum -= a[prev];
                     }
                     break;
                 }
