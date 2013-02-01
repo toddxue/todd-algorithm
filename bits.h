@@ -39,13 +39,18 @@ namespace bits {
     inline uint log2(uint a) { uint c = 0; while (a >>= 1) ++c; return c; }
 
     /**
+     * right most 1 pos
+     */
+    inline uint right_most_1_pos(uint a) { if (!a) return 32; uint pos = 0; while ((a & 1) == 0) a >>= 1, ++pos; return pos; }
+
+    /**
      * Number of bit 1
      *   3 --> 2
      *   4 --> 1
      */
     inline uint number_of_bit1(uint a) { uint c = 0; while (a > 0) { c += (a & 0x1); a >>= 1; } return c; }
     inline uint number_of_bit0(uint a) { return (uint)(sizeof(uint)/sizeof(char)*8 - number_of_bit1(a)); }
-    
+
 
     /**
      * next smallest number with same number of 1 bits
@@ -55,44 +60,63 @@ namespace bits {
         
         if (a == 0)
             return 0;
-        
+
         /**
-         * first the right most 1 postion
+         *  0  1 1 1 0 0 0 0 
+         *         ^
+         *         p1
          */
-        uint pos = 0;
-        while (pos < 32 && (a & (1 << pos)) == 0)
-            ++pos;
-        if (pos == 32)
-            return 0;
+        uint p1 = right_most_1_pos(a);
 
-        uint pos2 = pos + 1;
-        while (pos2 < 32 && (a & (1 << pos2)) == 1)
-            ++pos2;
-
-        if (pos2 == 32)
+        /**
+         *  0 1 1 1 0 0 0 0 
+         *        ^
+         *  ^     p1
+         *  p2
+         */
+        uint p2 = p1+1;
+        while (p2 < 32 && (a & (1 << p2)) > 0) ++p2;
+        if (p2 == 32)
             return 0;
 
         uint b = a;
+        /**
+         * turn on p2 bit
+         * 
+         *  1  1 1 1 0 0 0 0 
+         *  ^     
+         *  p2
+         */
+        b |= (1 << p2);
 
         /**
-         * turn on pos2 bit
+         * turn off [0, p2)
+         * 
+         *  1  0 0 0 0 0 0 0 
+         *  ^     
+         *  p2
          */
-        b |= (1 << pos2);
-
-            
-        /**
-         * turn off all [0~pos2) to 0
-         */
-        b &= ~((1 << pos2) - 1);
+        b &= ~((1 << p2) - 1);
 
         /**
          * turn on all removed bits to lowest bits
+         *
+         *  1  0 0 0 0 0 1 1 
+         *  ^     
          */
-        if (pos2 - pos > 1)
-            b |= ((1 << (pos2 - pos - 1)) - 1);
+        if (p2 - p1 > 1)
+            b |= ((1 << (p2 - p1 - 1)) - 1);
         
         return b;
     }
+
+    /**
+     * previous largest number with same number of 1 bits
+     * return 0 if there is no next number
+     * 
+     * the reverse of next_smallest, turns out simpler :)
+     */
+    inline uint prev_largest(uint a) { return ~next_smallest(~a); }
 }
 
 #endif

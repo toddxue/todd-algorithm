@@ -46,10 +46,23 @@ int main(int argc, char* argv[]) {
     OK(bits::number_of_bit1(7) == 3);
     OK(bits::number_of_bit1(15) == 4);
 
+    
+    OK(bits::right_most_1_pos(0) == 32);
+    OK(bits::right_most_1_pos(1) == 0);
+    OK(bits::right_most_1_pos(2) == 1);
+    OK(bits::right_most_1_pos(3) == 0);
+    OK(bits::right_most_1_pos(4) == 2);
+    OK(bits::right_most_1_pos(6) == 1);
+
     OK(bits::next_smallest(1) == 2);
     OK(bits::next_smallest(2) == 4);
     OK(bits::next_smallest(3) == 5);
-    OK(bits::next_smallest(5) == 7);
+    OK(bits::next_smallest(5) == 6);
+
+    OK(bits::prev_largest(2) == 1);
+    OK(bits::prev_largest(4) == 2);
+    OK(bits::prev_largest(5) == 3);
+    OK(bits::prev_largest(6) == 5);
 
     return 0;
 }
