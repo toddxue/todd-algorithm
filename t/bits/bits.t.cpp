@@ -32,6 +32,13 @@ int main(int argc, char* argv[]) {
     OK(bits::max(456, 123) == 456);
     OK(bits::min(456, 123) == 123);
 
+    OK(swap_test(0, 0));
+    OK(swap_test(1, 0));
+    OK(swap_test(0, 0));
+    OK(swap_test(1, 1));
+
+    OK(swap_test(1, 2));
+
     OK(swap_test(123, 456));
     OK(swap_test(456, 123));
 

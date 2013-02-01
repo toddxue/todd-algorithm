@@ -32,12 +32,24 @@ namespace bits {
     inline uint min(uint a, uint b) { return a + b - max(a, b); }
 
     /**
-     * swap using ^ and |, in Z/2, it's same as -, +
+     * swap using ^, in Z/2, it's same as -, + WITHOUT extra storage
      * (a, b) -> (a-b, b) -> (a-b, a) -> (b, a)
+     * 
+     * If inline really succeeded, then it really does it without extra storage
+     * 
+     * i'm confused at the beginning, now clarify as this:
+     *  
+     * in Z/2
+     *   ^  + or -
+     *   | max
+     *   & min
+     *   ~ no mapping, seems
+     *
+     * the codes written below is weird, without looking the above logic, how we know it works :(???
      */
     inline void swap(uint& a, uint& b) { 
         a = a ^ b; 
-        b = b | a; 
+        b = a ^ b; 
         a = a ^ b; 
     }
 
