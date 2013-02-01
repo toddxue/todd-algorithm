@@ -19,11 +19,7 @@ int main(int argc, char* argv[]) {
         a[i-2] = strtol(argv[i], 0, 10);
 
     sort_quick(n, a);
-    for (int i = 0, j = n-1; i < j; ++i, --j) {
-        int tmp = a[i];
-        a[i] = a[j];
-        a[j] = tmp;
-    }
+    reverse(n, a);
 
     int o_c = knapsack::integer::find_sum(n, a, target_sum, o);
 
@@ -58,10 +54,18 @@ int main(int argc, char* argv[]) {
     user0m0.102s
     sys0m0.062s
 
-    V3: sort from biggest to smaller, reduce a little bit
+    V3: sort from biggest to smaller, 
     real0m0.124s
     user0m0.063s
     sys0m0.059s
- * 
+
+        The reason of this speedup is: we need smaller sub array to reach the target sum, the algorithm now essentially
+          O(target_sum * K + K * log K) = O(target_sum * K)
+        where K: 
+          the left most sub array (a[i_1], ..., a[i_k]) that a[i_1] + ... + a[i_k] = target_sum
+        but this one is heuristic, in case we always need the smaller one to meet, we eventurally leads to O(target_sum * n)
+        
+        BUT take chance, also very high probability chance :)
+ **
  */
 

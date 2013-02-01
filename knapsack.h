@@ -9,6 +9,8 @@
 #ifndef _knapsack_h
 #define _knapsack_h
 
+#include "common.h"
+
 /**
  * some knapsack operations
  * mainly dynamic programming
@@ -45,7 +47,12 @@ namespace knapsack {
                 return n;
             }
             
-            //max = target_sum + 1; // to same some space
+            /**
+             * from now on,
+             * max act as memory boundary, 
+             * so no need to beyond target_sum any more
+             */
+            max = target_sum + 1;
                 
             /**
              * dynamic memory matrix:
@@ -103,14 +110,13 @@ namespace knapsack {
                     int curr = i;
                     int sum = target_sum;
                     int prev;
-                    while ((prev = Matrix[sum * n + curr]) >= -1) {
+                    while (curr >= 0 && (prev = Matrix[sum * n + curr]) >= -1) {
                         out[out_c++] = a[curr];
                         sum -= a[curr];
                         curr = prev;
-
-                        if (curr == -1) 
-                            break;
                     }
+                    reverse(out_c, out);
+                    
                     break;
                 }
             }
