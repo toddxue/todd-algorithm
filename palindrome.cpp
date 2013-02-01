@@ -4,15 +4,6 @@
 namespace palindrome {
 
 
-    bool is_palindrome(char const* s, char const* s_end) 
-    {
-        for (; s < s_end; ++s, --s_end)
-            if (*s != *s_end) 
-                return false;
-        return true;
-    }
-
-
     /**
      * max length sub string which is a palindrome
      * output goes into out buffer, return the end position inside buffer
