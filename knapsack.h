@@ -59,47 +59,63 @@ namespace knapsack {
              *       -1 means (a[i] == sum) in current position
              */
             int* Matrix = new int[max * n];
+
+            /**
+             * to speed up the lookup of sum in a[0...i] so far
+             */
+            int* RightMostIndex = new int [max];
+            for (int sum = 0; sum < max; ++sum)
+                RightMostIndex[sum] = -1;
+            
             int out_c = 0;
             for (int i = 0; i < n; ++i) {
 
                 /**
                  * now a[i] is the last element of the sum
+                 * the reverse order iteration of target_sum->0 is important
+                 * or a[i] will be repeatly counted
                  */
-                int sum = 0;
-                for (; sum <= target_sum; ++sum) {
+                for (int sum = target_sum; sum >= 0; --sum) {
                     Matrix[sum * n + i] = -2;
                     int prev_sum = sum - a[i];
 
-                    if (prev_sum == 0)
+                    if (prev_sum == 0) {
                         Matrix[sum * n + i] = -1;
-
-                    else if(prev_sum > 0)
+                        RightMostIndex[sum] = i;
+                    }
+                    else if(prev_sum > 0) {
                         /**
                          * find if prev_sum exists in a[0..i)
                          */
-                        for (int j = 0; j < i; ++j)
-                            if (Matrix[prev_sum * n + j] >= -1)
-                                Matrix[sum * n + i] = j;
+                        if (RightMostIndex[prev_sum] >= 0) {
+                            Matrix[sum * n + i] = RightMostIndex[prev_sum];
+                            RightMostIndex[sum] = i;
+                        }
+                    }
                 }
 
                 if (Matrix[target_sum * n + i] >= -1) {
                     /**
-                     * we got one solution here
+                     * we got one solution here,
+                     * notorious to write down correctly this part of codes, 
+                     * why :( :(
                      */
-                    out[out_c++] = a[i];
-
                     int curr = i;
                     int sum = target_sum;
                     int prev;
-                    while ((prev = Matrix[sum * n + curr]) >= 0) {
-                        out[out_c++] = a[prev];
+                    while ((prev = Matrix[sum * n + curr]) >= -1) {
+                        out[out_c++] = a[curr];
+                        sum -= a[curr];
                         curr = prev;
-                        sum -= a[prev];
+
+                        if (curr == -1) 
+                            break;
                     }
                     break;
                 }
             }
             delete[] Matrix;
+            delete[] RightMostIndex;
             return out_c;
         }
     }
