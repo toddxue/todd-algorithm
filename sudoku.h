@@ -73,7 +73,7 @@ namespace sudoku {
     /**
      * Simplest backtrack
      */
-    inline bool simple_backtrack(int (&A)[9][9]) {
+    inline bool backtrack1(int (&A)[9][9]) {
         /**
          * get next choice
          */
@@ -102,7 +102,7 @@ namespace sudoku {
             /**
              * if try succeeded, return immediately
              */
-            if (check(A, row_choice, col_choice) && simple_backtrack(A))
+            if (check(A, row_choice, col_choice) && backtrack1(A))
                 return true;
         }
 
@@ -112,6 +112,135 @@ namespace sudoku {
         A[row_choice][col_choice] = 0;
         return false;
     }
+
+
+    /**
+     * A little bit optimization, don't lookup from beginning
+     * A little bit faster from 10 to 7, but not to 4,3, 
+     */
+    inline bool backtrack2(int (&A)[9][9], int row_curr = 0, int col_curr = 0) {
+        /**
+         * get next choice
+         */
+        bool has_choice = false;
+        while (row_curr < 9 && col_curr < 9) {
+            if (col_curr + 1 < 9)
+                ++col_curr;
+            else
+                col_curr = 0, ++row_curr;
+            
+            if (row_curr < 9 && col_curr < 9 && A[row_curr][col_curr] == 0) {
+                    has_choice = true;
+                    break;
+            }
+        }
+        
+        /**
+         * no further choice, to bottom, succeeded
+         */
+        if (has_choice == false)
+            return true;
+            
+        /**
+         * try the choice
+         */
+        int row_choice = row_curr;
+        int col_choice = col_curr;
+        for (int choice = 1; choice <= 9; ++choice) {
+            A[row_choice][col_choice] = choice;
+                
+            /**
+             * if try succeeded, return immediately
+             */
+            if (check(A, row_choice, col_choice) && backtrack2(A))
+                return true;
+        }
+
+        /**
+         * if failed, restore status before try and backup to try other choices from higher level
+         */
+        A[row_choice][col_choice] = 0;
+        return false;
+    }
+
+
+    /**
+     * now do a big jump on optimization, build the path first
+     * a cell list order by increasing choices 
+     * always iterate cell with less choice first, this matches the usually human experiences
+     * 
+     * return the length of the choices
+     */
+    inline int build_choice_cell_list(int (&A)[9][9], int* choices) {
+        int row_weight[9] = {0};
+        int col_weight[9] = {0};
+        for (int row = 0; row < 9; ++row) {
+            for (int col = 0; col < 9; ++col) {
+                if (A[row][col] == 0) {
+                    row_weight[row]++;
+                    col_weight[col]++;
+                }
+            }
+        }
+
+        int choices_c = 0;
+        for (int row = 0; row < 9; ++row) {
+            for (int col = 0; col < 9; ++col) {
+                if (A[row][col] == 0) {
+                    int weight = row_weight[row] < col_weight[col] ? row_weight[row] : col_weight[col];
+                    choices[choices_c++] =  (weight << 16) + (row << 8) + col;
+                }
+            }
+        }
+        return choices_c;
+    }
+
+
+    inline bool backtrack3(int (&A)[9][9], int curr, int choices_c, int* choices) {
+        /**
+         * get next choice
+         */
+        bool has_choice = false;
+        if (curr + 1 < choices_c) {
+            ++curr;
+            has_choice = true;
+        }
+        
+        /**
+         * no further choice, to bottom, succeeded
+         */
+        if (has_choice == false)
+            return true;
+            
+        /**
+         * try the choice
+         */
+        int row_choice = (choices[curr] >> 8) & ((1<<8) - 1);
+        int col_choice = (choices[curr]) & ((1<<8) - 1);
+        for (int choice = 1; choice <= 9; ++choice) {
+            A[row_choice][col_choice] = choice;
+                
+            /**
+             * if try succeeded, return immediately
+             */
+            if (check(A, row_choice, col_choice) && backtrack3(A, curr, choices_c, choices))
+                return true;
+        }
+
+        /**
+         * if failed, restore status before try and backup to try other choices from higher level
+         */
+        A[row_choice][col_choice] = 0;
+        return false;
+    }
+
+    inline bool backtrack3(int (&A)[9][9]) {
+        int choices[9*9];
+        int choices_c = build_choice_cell_list(A, choices);
+        int curr = -1;
+        return backtrack3(A, curr, choices_c, choices);
+    }
+    
 }
 
 #endif
