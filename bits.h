@@ -77,6 +77,15 @@ namespace bits {
      * Number of bit 1
      *   3 --> 2
      *   4 --> 1
+     * 
+     * There are a lot of solutions for this one, reference to http://www.cnblogs.com/graphics/archive/2010/06/21/1752421.html
+     * one is like this one:
+     *
+     *   unsigned int tmp = n - ((n >> 1) & 033333333333) - ((n >> 2) & 011111111111);
+     *   return ((tmp + (tmp >> 3)) & 030707070707) % 63;
+     * 
+     * another one is:
+     *    { c = 0; for (; n > 0; n &= n-1) ++c; return c; }
      */
     inline uint number_of_bit1(uint a) { uint c = 0; while (a > 0) { c += (a & 0x1); a >>= 1; } return c; }
     inline uint number_of_bit0(uint a) { return (uint)(sizeof(uint)/sizeof(char)*8 - number_of_bit1(a)); }
