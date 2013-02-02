@@ -47,21 +47,40 @@ int main() {
             {0, 0, 1,  0, 3, 4,  0, 8, 0},
         };
 
-
-    for (int c = 0; c < 10; ++c) {
+    for (int c = 400; c >= 0; --c) {
         int A[9][9];
         memcpy(A, M3, sizeof(A));
-        if (sudoku::backtrack1(A)) {
-            sudoku::print(A);
-            int r,l;
-            if (!sudoku::checkall(A, r, l)) {
-                fprintf(stderr, "internal error at (%d, %d)\n", r, l);
-                return 1;
+        if (sudoku::backtrack3(A)) {
+            if (c == 0) {
+                sudoku::print(A);
+                int r,l;
+                if (!sudoku::checkall(A, r, l)) {
+                    fprintf(stderr, "internal error at (%d, %d)\n", r, l);
+                    return 1;
+                }
             }
-            return 0;
         }
     }
-
-    return 1;
+    return 0;
 }
 
+/**
+ * performance difference:
+ >time ./simple-backtrack.play
+ 4   8   7   6   9   2   1   5   3  
+ 6   1   3   5   4   7   9   2   8  
+ 9   2   5   3   1   8   7   6   4  
+ 1   9   8   2   7   3   6   4   5  
+ 7   3   6   4   5   1   8   9   2  
+ 5   4   2   8   6   9   3   7   1  
+ 8   7   9   1   2   5   4   3   6  
+ 3   5   4   9   8   6   2   1   7  
+ 2   6   1   7   3   4   5   8   9  
+
+ backtrack1: real0m1.606s
+ backtrack2: real0m0.733s
+ backtrack3: real0m0.409s
+ *
+ * the heuristic #3 optimization works, but that huge, still expoential algorithms
+ *
+ */
