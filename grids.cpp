@@ -59,7 +59,7 @@ void Grids::DFS(Vertex* v)
     Edge* e;
 
     DFS_visited[v->no] = true;
-    //DFS_result.push_back(v);
+    DFS_result.push_back(v);
 
     for (int i = 0; i < v->edges_c; ++i) {
         e = v->edges[i];
@@ -71,7 +71,7 @@ void Grids::DFS(Vertex* v)
             DFS(v_to);
         }
     }
-    DFS_result.push_back(v);
+    //DFS_result.push_back(v);
 }
 
 

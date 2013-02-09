@@ -28,13 +28,14 @@
 #include "draw.h"
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 struct Grids {
     Graph g;
     Vertex vertices[10][5];
     Draw d;
 
-    Grids() : d(false, '-', '|')
+    Grids(int percentage = 100) : d(false, '-', '|')
     {
         int curr_no = 0;
 
@@ -48,8 +49,12 @@ struct Grids {
 
                 g.vertex(&vertices[i][j]);
 
-                if (i > 0) g.edge(&vertices[i-1][j], &vertices[i][j]);
-                if (j > 0) g.edge(&vertices[i][j-1], &vertices[i][j]);
+                if (i > 0) 
+                    if (random() % 100 < percentage) 
+                        g.edge(&vertices[i-1][j], &vertices[i][j]);
+                if (j > 0) 
+                    if (random() % 100 < percentage) 
+                        g.edge(&vertices[i][j-1], &vertices[i][j]);
             }
         }
     }
