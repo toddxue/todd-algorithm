@@ -52,21 +52,30 @@ struct Grids {
                 if (j > 0) g.edge(&vertices[i][j-1], &vertices[i][j]);
             }
         }
+    }
+    
+    void draw(char fill_x = '-', char fill_y = '|')
+    {
+        d.fill_x = fill_x;
+        d.fill_y = fill_y;
+        
         g.draw(d);
-
         for (int i = 0; i < 10; ++i) {
             for (int j = 0; j < 5; ++j) {
                 Vertex* v = &vertices[i][j];
-                d.out(v->x, v->y, '*');
+                d.out(v->x, v->y, 'o');
             }
         }
     }
+
     void print() { 
         d.print(); 
     }
 
-    void BFS();
-    void DFS();
+    void BFS(int startX, int startY);
+
+    void DFS(int x, int y);
+    void DFS(Vertex* v);
 };
 
 #endif

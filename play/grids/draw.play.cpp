@@ -2,8 +2,6 @@
 
 int main(int argc, char* argv[]) {
     Grids gr;
-    gr.print();
-
-    gr.BFS();
+    gr.draw();
     gr.print();
 }
