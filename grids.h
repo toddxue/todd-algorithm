@@ -64,6 +64,9 @@ struct Grids {
     void print() { 
         d.print(); 
     }
+
+    void BFS();
+    void DFS();
 };
 
 #endif
