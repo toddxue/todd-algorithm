@@ -35,7 +35,7 @@ struct Grids {
     Vertex vertices[10][5];
     Draw d;
 
-    Grids(int percentage = 100) : d(false, '-', '|')
+    Grids(int percent = 100, bool diag = true, bool bidirect = true) : d(false, '-', '|')
     {
         int curr_no = 0;
 
@@ -49,20 +49,27 @@ struct Grids {
 
                 g.vertex(&vertices[i][j]);
 
-                if (i > 0) 
-                    if (random() % 100 < percentage) 
-                        g.edge(&vertices[i-1][j], &vertices[i][j]);
-                if (j > 0) 
-                    if (random() % 100 < percentage) 
-                        g.edge(&vertices[i][j-1], &vertices[i][j]);
+                if (i > 0) edge(&vertices[i-1][j], &vertices[i][j], percent, bidirect);
+                if (j > 0) edge(&vertices[i][j-1], &vertices[i][j], percent, bidirect);
+                if (i > 0 && j > 0 && diag)
+                    edge(&vertices[i-1][j-1], &vertices[i][j], percent, bidirect);
             }
         }
     }
+
+    void edge(Vertex* from, Vertex* to, int percent, bool bidirect) {
+        if (random() % 100 < percent) {
+            g.edge(from, to);
+            if (bidirect)
+                g.edge(to, from);
+        }
+    }
     
-    void draw(char fill_x = '-', char fill_y = '|')
+    void draw(char fill_x = '-', char fill_y = '|', char fill_backslash = '\\')
     {
         d.fill_x = fill_x;
         d.fill_y = fill_y;
+        d.fill_backslash = fill_backslash;
         
         g.draw(d);
         for (int i = 0; i < 10; ++i) {

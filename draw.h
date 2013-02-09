@@ -21,10 +21,11 @@ struct Draw {
     };
     
     char str[eY_MAX+1][eX_MAX+2];
-    char fill_x, fill_y;
-    Draw(bool boundary=true, char fill_x = '.', char fill_y = '.') 
+    char fill_x, fill_y, fill_backslash;
+    Draw(bool boundary=true, char fill_x = '.', char fill_y = '.', char fill_backslash = '\\') 
         : fill_x(fill_x)
         , fill_y(fill_y)
+        , fill_backslash(fill_backslash)
     {
         memset(str, ' ', sizeof(str));
 
@@ -104,7 +105,7 @@ struct Draw {
             double k = (x2-x)*1.0 / (y2-y);
             for (int yy = y; yy <= y2; ++yy) {
                 int xx = int(round(x + k * (yy-y)));
-                str[yy][xx] = fill_y;
+                str[yy][xx] = fill_backslash;
             }
         }
         else if (y2 < y) {

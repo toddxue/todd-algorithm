@@ -5,7 +5,7 @@ int main(int argc, char* argv[]) {
     if (argv[1]) 
         percentage = strtol(argv[1], 0, 10);
 
-    Grids gr(percentage);
+    Grids gr(percentage, true);
     gr.draw();
     gr.print();
 }

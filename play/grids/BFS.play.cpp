@@ -6,11 +6,11 @@ int main(int argc, char* argv[]) {
     int start_x = argc >= 3 && argv[2] ? strtol(argv[2], 0, 10) : 0;
     int start_y = argc >= 4 && argv[3] ? strtol(argv[3], 0, 10) : 0;
 
-    Grids gr(percent);
-    gr.draw();
-    gr.print();
+    Grids gr(percent, true);
+    //gr.draw();
+    //gr.print();
 
-    gr.draw(' ', ' ');
+    gr.draw(' ', ' ', ' ');
     gr.BFS(start_x, start_y);
     gr.print();
 }

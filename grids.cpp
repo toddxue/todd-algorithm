@@ -13,6 +13,7 @@ void Grids::BFS(int startX, int startY)
 
     d.fill_x = '-';
     d.fill_y = '|';
+    d.fill_backslash = '\\';
 
     v = &vertices[startX][startY];
     q.push(v);
@@ -48,6 +49,7 @@ void Grids::DFS(int x, int y)
 {
     d.fill_x = '-';
     d.fill_y = '|';
+    d.fill_backslash = '\\';
     DFS(&vertices[x][y]);
     for (int i = 0; i < DFS_result.size(); ++i)
         d.out(DFS_result[i]->x, DFS_result[i]->y, i);
