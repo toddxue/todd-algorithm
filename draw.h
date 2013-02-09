@@ -21,24 +21,33 @@ struct Draw {
     };
     
     char str[eY_MAX+1][eX_MAX+2];
-    char fill;
-    Draw() {
+    char fill_x, fill_y;
+    Draw(bool boundary=true, char fill_x = '.', char fill_y = '.') 
+        : fill_x(fill_x)
+        , fill_y(fill_y)
+    {
         memset(str, ' ', sizeof(str));
-        for (int yy = 0; yy <= eY_MAX; ++yy) {
-            str[yy][0] = '|';
-            str[yy][eX_MAX] = '|';
+
+        for (int yy = 0; yy <= eY_MAX; ++yy)
             str[yy][eX_MAX+1] = '\n';
+
+        if (boundary) {
+            for (int yy = 0; yy <= eY_MAX; ++yy) {
+                str[yy][0] = '|';
+                str[yy][eX_MAX] = '|';
+                str[yy][eX_MAX+1] = '\n';
+            }
+            for (int xx = 1; xx < eX_MAX; ++xx) {
+                str[0][xx] = '-';
+                str[eY_MAX][xx] = '-';
+            }
+
+            const char corner = 'o';
+            str[0][0]   = corner;
+            str[0][eX_MAX]  = corner;
+            str[eY_MAX][eX_MAX] = corner;
+            str[eY_MAX][0]  = corner;
         }
-        for (int xx = 1; xx < eX_MAX; ++xx) {
-            str[0][xx] = '-';
-            str[eY_MAX][xx] = '-';
-        }
-        const char corner = 'o';
-        str[0][0]   = corner;
-        str[0][eX_MAX]  = corner;
-        str[eY_MAX][eX_MAX] = corner;
-        str[eY_MAX][0]  = corner;
-        fill = '.';
     }
 
     int x;
@@ -64,7 +73,7 @@ struct Draw {
             else
             for (int xx = x; xx <= x2; ++xx) {
                 int yy = int(round(y + k * (xx-x)));
-                str[yy][xx] = fill;
+                str[yy][xx] = fill_x;
             }
         }
         else if (x2 < x) {
@@ -73,18 +82,18 @@ struct Draw {
             else
             for (int xx = x; xx >= x2; --xx) {
                 int yy = int(round(y + k * (xx-x)));
-                str[yy][xx] = fill;
+                str[yy][xx] = fill_x;
             }
         }
         else {  // x2 == x
             if (y < y2) 
                 for (int yy = y; yy <= y2; ++yy)
-                    str[yy][x] = fill;
+                    str[yy][x] = fill_y;
             else if (y > y2) 
                     for (int yy = y; yy >= y2; --yy)
-                        str[yy][x] = fill;
+                        str[yy][x] = fill_y;
             else
-                str[y][x] = fill;
+                str[y][x] = '.';
         }
         
         move_to(x2, y2);
@@ -95,14 +104,14 @@ struct Draw {
             double k = (x2-x)*1.0 / (y2-y);
             for (int yy = y; yy <= y2; ++yy) {
                 int xx = int(round(x + k * (yy-y)));
-                str[yy][xx] = fill;
+                str[yy][xx] = fill_y;
             }
         }
         else if (y2 < y) {
             double k = (x2-x)*1.0 / (y2-y);
             for (int yy = y; yy >= y2; --yy) {
                 int xx = int(round(x + k * (yy-y)));
-                str[yy][xx] = fill;
+                str[yy][xx] = fill_y;
             }
         }
     }
@@ -120,6 +129,10 @@ struct Draw {
         char str[16];
         sprintf(str, "%d", n);
         out(xx, yy, str);
+    }
+
+    void out(int xx, int yy, char c) {
+        str[yy][xx] = c;
     }
 
     void print() {

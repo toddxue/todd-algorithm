@@ -48,6 +48,7 @@ struct Graph {
     }
 
     void print(char* title = 0);
+    void draw(struct Draw& d);
 
     void vertex(Vertex* v) { vertices[vertices_c++] = v; }
     void edge(Vertex* from, Vertex* to) {
