@@ -34,4 +34,13 @@ int max_increase_sequence_count(int na, int* a);
 int max_distance_less_than_brute_force(int n, int* a);
 int max_distance_less_than_linear_time(int n, int* a);
 
+/**
+ * max 2 integers from array
+ * 
+ * pre condition: n >= 2
+ * (so make return value as void)
+ */
+void max2_brute_force(int n, int* a, int& max, int& max2);
+void max2_fbt(int n, int* a, int& max, int& max2);
+
 #endif
