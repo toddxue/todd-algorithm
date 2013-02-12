@@ -771,8 +771,17 @@ void max2_brute_force(int n, int* a, int& max, int& max2)
     }
 }
 
+/**
+ * The n + AboveRound(log(n)) - 2 Low bounds algorithm
+ * Function stack really make functions simpler
+ * Should have easifier way to preallocate memory to avoid dynamic allocation 
+ * everytime for 2 stack based vector, even one is passed up actually
+ * 
+ * 2 note about calculation:
+ *   2-sons TREE: node-count + 1 == leaf-count
+ *   height of TREE if do devide: UpperBound(log(n))
+ */
 #include <vector>
-
 int max2_fbt(int n, int* a, std::vector<int>& second_vec)
 {
     if (n == 1) 
@@ -796,7 +805,6 @@ int max2_fbt(int n, int* a, std::vector<int>& second_vec)
         return m1;
     }
 }
-
 void max2_fbt(int n, int* a, int& max, int& max2)
 {
     if (n < 2)
