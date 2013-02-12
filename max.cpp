@@ -755,7 +755,7 @@ int max_distance_less_than_linear_time(int n, int* a)
  */
 void max2_brute_force(int n, int* a, int& max, int& max2)
 {
-    if (n <= 2)
+    if (n < 2)
         return;
 
     if (a[0] < a[1])
@@ -771,59 +771,43 @@ void max2_brute_force(int n, int* a, int& max, int& max2)
     }
 }
 
-void max2_fbt(int n, int* a0, int& max, int& max2)
+#include <vector>
+
+int max2_fbt(int n, int* a, std::vector<int>& second_vec)
 {
-    if (n <= 2)
-        return;
+    if (n == 1) 
+        return a[0];
 
-    int* fbt0 = new int[n]; 
+    std::vector<int> v1, v2;
+    int m1, m2;
 
+    int middle = n/2;
+    m1 = max2_fbt(middle, a, v1);
+    m2 = max2_fbt(n - middle, a + middle, v2);
 
-    int* fbt = fbt0 - 1; //[1, n]
-    int* a = a0 - 1;
-
-    for (int i = n; i >= 1; --i) {
-        if (2*i > n) 
-            fbt[i] = i;
-        else if (2*i + 1 > n)
-            fbt[i] = 2*i;
-        else {
-            if (a[fbt[2*i]] >= a[fbt[2*i + 1]])
-                fbt[i] = fbt[2*i];
-            else
-                fbt[i] = fbt[2*i + 1];
-        }
-    }
-
-    max = a[fbt[1]];
-    int curr;
-    if (fbt[1] == fbt[2]) {
-        curr = 2;
-        max2 = a[fbt[3]];
+    if (m1 < m2) {
+        second_vec.swap(v2);
+        second_vec.push_back(m1);
+        return m2;
     }
     else {
-        curr = 3;
-        max2 = a[fbt[2]];
+        second_vec.swap(v1);
+        second_vec.push_back(m2);
+        return m1;
     }
+}
 
-    /**
-     * get the 2nd max from the path of root to fbt[1] 
-     */
-    while (curr * 2 + 1 <= n) {
-        int candidate;
-        if (fbt[curr * 2] == fbt[curr]) {
-            candidate = curr * 2 + 1;
-            curr = curr * 2;
-        }
-        else {
-            candidate = curr * 2;
-            curr = curr * 2 + 1;
-        }
+void max2_fbt(int n, int* a, int& max, int& max2)
+{
+    if (n < 2)
+        return;
 
-        if (a[fbt[candidate]] > max2)
-            max2 = a[fbt[candidate]];
-    }
+    std::vector<int> second_vec;
+    max = max2_fbt(n, a, second_vec);
 
-    delete[] fbt0;
+    max2 = second_vec[0];
+    for (int i = 1; i < second_vec.size(); ++i)
+        if (max2 < second_vec[i])
+            max2 = second_vec[i];
 }
 
