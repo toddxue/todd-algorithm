@@ -34,12 +34,13 @@ inline bool operator == (word const& a, word const& b) {
 }
 inline bool operator == (word const& a, char const* str) { word b(str); return a == b; }
 inline bool operator == (char const* str, word const& a) { return a == str; }
-static word dict[] = { "a", "an", "em", "fir", "fire", "ire", "ma", "man", };
+static word dict[] = { "a", "an", "em", "fir", "fire", "ire", "ma", "man", "b", "c", "ab", "bc", "abc"};
 
 /**
  * split string into words
  */
 #include <vector>
-bool split_words(char const* str, std::vector<word>& words);
+bool split_words(char const* str, std::vector<word>& words); // backtrack
+int split_words_ways(char const* str); // only counting
 
 #endif
