@@ -1,6 +1,6 @@
 #include "words.h"
 
-static word dict[] = { "a", "an", "em", "fir", "fire", "ire", "ma", "man" };
+static word dict[] = { "a", "b", "c", "ab", "bc", "abc"};
 
 int main(int argc, char* argv[]) {
     if (argc != 2)
@@ -8,7 +8,10 @@ int main(int argc, char* argv[]) {
 
     char const* str = argv[1];
     std::vector<word> words;
-    if (split_words(str, words, sizeof(dict)/sizeof(dict[0]), dict)) {
+    
+    int count = split_minimum_words(str, words, sizeof(dict)/sizeof(dict[0]), dict);
+    if (count > 0) {
+        printf("count=%d\n", count);
         for (int i = 0; i < words.size(); ++i)
             fprintf(stdout, "%.*s\n", words[i].len(), words[i].b);
         return 0;
@@ -19,11 +22,12 @@ int main(int argc, char* argv[]) {
 
 /**
  * 
-
- $ ./split.play fireman
- fir
- em
- an
-
+ >./split-min.play aababcaba
+ count=5
+ a
+ ab
+ abc
+ ab
+ a
  * 
  */
